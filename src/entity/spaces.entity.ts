@@ -1,6 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { FormAdvertising } from './form-advertising.entity';
 import { LocationTypes } from './location-types.entity';
+import { Surfaces } from './surfaces.entity';
+import { Wards } from './wards.entity';
+import { ReportLocation } from './reportLocation.entity';
 
 
 export enum Zoning {
@@ -30,8 +33,8 @@ export class Spaces {
   latitude: number;
 
   // Longitude
-  @Column('decimal', { name: 'longitude', precision: 10, scale: 6 })
-  longitude: number;
+  @Column('decimal', { name: 'longtitude', precision: 10, scale: 6 })
+  longtitude: number;
 
   // Hình ảnh đặt bảng quảng cáo
   @Column('varchar', { name: 'img_url', length: 255, nullable: true })
@@ -44,12 +47,31 @@ export class Spaces {
     default: Zoning.DANGXULY,
   })
   role: Zoning;
+
+  @OneToMany(() => Surfaces, (surface) => surface.space)
+  surface: Surfaces[];
   
 
   // Hình thức quảng cáo - FK
-  @ManyToOne(() => FormAdvertising, formAdvertising => formAdvertising.spaces)
+  @ManyToOne(() => FormAdvertising, formAdvertising => formAdvertising.spaces, { eager: true })
   formAdvertising: FormAdvertising;
   // Loại vị trí - FK
-  @ManyToOne(() => LocationTypes, locationTypes => locationTypes.spaces)
+  @ManyToOne(() => LocationTypes, locationTypes => locationTypes.spaces,  { eager: true })
   locationTypes: LocationTypes;
+
+  @ManyToOne(() => Wards, ward => ward.spaces, { eager: true })
+  ward: Wards;
+
+  @OneToMany(() => ReportLocation, (reportLocation) => reportLocation.space)
+  reportLocations: ReportLocation[];
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
+  lastUpdate: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
+
 }

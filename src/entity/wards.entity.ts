@@ -2,10 +2,13 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Districts } from './districts.entity';
+import { Spaces } from './spaces.entity';
 
 @Entity({ name: 'wards' })
 export class Wards {
@@ -30,6 +33,14 @@ export class Wards {
     unique: true,
   })
   maPK: string;
+
+  // Quận - FK
+  @ManyToOne(() => Districts, district => district.wards, { eager: true })
+  district: Districts;
+
+  @OneToMany(() => Spaces, space => space.ward)
+  spaces: Spaces[];
+
 
   @Column('timestamp', {
     name: 'last_update',

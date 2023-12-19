@@ -10,6 +10,11 @@ import { Spaces } from './entity/spaces.entity';
 import { Districts } from './entity/districts.entity';
 import { Wards } from './entity/wards.entity';
 import { SurfacesModule } from './surfaces/surfaces.module';
+import { SpacesModule } from './spaces/spaces.module';
+import { ReportLocation } from './entity/reportLocation.entity';
+import { ReportBillboard } from './entity/reportBillboard.entity';
+import { FormReport } from './entity/form-report.entity';
+
 
 @Module({
   imports: [
@@ -20,10 +25,11 @@ import { SurfacesModule } from './surfaces/surfaces.module';
       username: 'root',
       password: 'admin123',
       database: 'be_wnc',
-      entities: [SurfaceTypes, Surfaces, FormAdvertising, LocationTypes, Spaces, Districts, Wards],
+      entities: [SurfaceTypes, Surfaces, FormAdvertising, LocationTypes, Spaces, Districts, Wards, ReportBillboard, ReportLocation, FormReport],
       synchronize: true,
     }),
     SurfacesModule,
+    SpacesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

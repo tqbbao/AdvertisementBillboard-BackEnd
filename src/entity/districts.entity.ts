@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Wards } from './wards.entity';
 
 @Entity({ name: 'districts' })
 export class Districts {
@@ -23,6 +24,9 @@ export class Districts {
     unique: true,
   })
   maQH: string;
+
+  @OneToMany(() => Wards, ward => ward.district)
+  wards: Wards[];
 
 
   @Column('timestamp', {

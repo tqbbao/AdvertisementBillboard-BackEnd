@@ -1,5 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { SurfaceTypes } from './surface-types.entity';
+import { Spaces } from './spaces.entity';
+import { ReportBillboard } from './reportBillboard.entity';
 
 @Entity({ name: 'surfaces' })
 export class Surfaces {
@@ -42,4 +44,11 @@ export class Surfaces {
   @ManyToOne(() => SurfaceTypes, (surfaceType) => surfaceType.surfaces)
   surfaceType: SurfaceTypes;
 
+  @ManyToOne(() => Spaces, (space) => space.surface)
+  space: Spaces;
+
+  @OneToMany(() => ReportBillboard, (reportBillboard) => reportBillboard.surface)
+  reportBillboards: ReportBillboard[];
+
+  
 }
