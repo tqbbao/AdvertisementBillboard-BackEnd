@@ -65,7 +65,7 @@ export class SurfacesService {
   //Soft Delete a surface (Remove)
   async removeSurface(id: number) {
     try {
-      let surface = await this.findById(id);
+      const surface = await this.findById(id);
       if (!surface) {
         throw new Error('Surface not found');
       }

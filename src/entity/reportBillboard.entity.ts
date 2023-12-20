@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { FormReport } from './form-report.entity';
 import { Surfaces } from './surfaces.entity';
 
@@ -18,7 +18,7 @@ export class ReportBillboard {
   })
   name: string;
 
-  @Column('varchar', { unique: true, name: 'email', length: 45 })
+  @Column('varchar', { name: 'email', length: 45 })
   email: string;
 
   @Column('varchar', { name: 'phone', length: 15 })
@@ -30,17 +30,14 @@ export class ReportBillboard {
   @Column('varchar', { name: 'img_url', length: 255, nullable: true })
   imgUrl: string;
 
-  @Column('timestamp', {
-    name: 'last_update',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
   lastUpdate: Date;
 
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
 
   @ManyToOne(() => FormReport, (formReport) => formReport.reportBillboards, {
     eager: true,

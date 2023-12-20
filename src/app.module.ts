@@ -14,6 +14,7 @@ import { SpacesModule } from './spaces/spaces.module';
 import { ReportLocation } from './entity/reportLocation.entity';
 import { ReportBillboard } from './entity/reportBillboard.entity';
 import { FormReport } from './entity/form-report.entity';
+import { ReportsBillboardModule } from './reports-billboard/reports-billboard.module';
 
 
 @Module({
@@ -30,6 +31,7 @@ import { FormReport } from './entity/form-report.entity';
     }),
     SurfacesModule,
     SpacesModule,
+    ReportsBillboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
