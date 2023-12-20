@@ -1,4 +1,13 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { SurfaceTypes } from './surface-types.entity';
 import { Spaces } from './spaces.entity';
 import { ReportBillboard } from './reportBillboard.entity';
@@ -28,17 +37,14 @@ export class Surfaces {
   @Column('timestamp', { name: 'expiry_date', nullable: true })
   expiryDate: Date;
 
-  @Column('timestamp', {
-    name: 'last_update',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
   lastUpdate: Date;
 
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
 
   // Loại bảng quảng cáo - FK
   @ManyToOne(() => SurfaceTypes, (surfaceType) => surfaceType.surfaces)
@@ -47,8 +53,9 @@ export class Surfaces {
   @ManyToOne(() => Spaces, (space) => space.surface)
   space: Spaces;
 
-  @OneToMany(() => ReportBillboard, (reportBillboard) => reportBillboard.surface)
+  @OneToMany(
+    () => ReportBillboard,
+    (reportBillboard) => reportBillboard.surface,
+  )
   reportBillboards: ReportBillboard[];
-
-  
 }

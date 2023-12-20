@@ -30,8 +30,11 @@ export class SpacesController {
   async findByLatLong(@Param('lat') lat: number, @Param('long') long: number) {
     return await this.spacesService.findByLatLong(lat, long);
   }
-  @Get('/reverseGeocoding/:lat,:long')
-  async reverseGeocoding(@Param('lat') lat: number, @Param('long') long: number) {
+  @Get('/reversegeocoding/:lat,:long')
+  async reverseGeocoding(
+    @Param('lat') lat: number,
+    @Param('long') long: number,
+  ) {
     return await this.spacesService.reverseGeocoding(lat, long);
   }
 

@@ -12,7 +12,7 @@ export class CreateSpaceDto {
   latitude: number;
 
   @IsNotEmpty()
-  longitude: number;
+  longtitude: number;
 
   imgUrl: string;
 

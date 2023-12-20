@@ -17,15 +17,43 @@ export class SpacesService {
   ) {}
 
   async reverseGeocoding(lat: number, long: number) {
-    const data = await this.httpService
+
+    const dataGeocoding = await this.httpService
       .get(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?access_token=pk.eyJ1Ijoibmh1dHBoYW1kZXYiLCJhIjoiY2xvbGcwZm5sMG1lMDJpbnJuemNmYm1xYyJ9.w9hEet44dcjmTnu7LWUkWQ`,
       )
       .pipe(map((response) => response.data));
-    return data;
+    // const dataGeocoding = await this.httpService
+    //   .get(
+    //     `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?access_token=pk.eyJ1Ijoibmh1dHBoYW1kZXYiLCJhIjoiY2xvbGcwZm5sMG1lMDJpbnJuemNmYm1xYyJ9.w9hEet44dcjmTnu7LWUkWQ`,
+    //   )
+    //   .pipe(
+    //     map((response) => {
+    //       console.log("object")
+    //       const features = response.data.features;
+    //       let address = features[0].text;
+    //       const ward = features[1].text;
+    //       const district = features[3].text;
+    //       const city = features[4].text;
+    //       const fullAddress = `${address}, ${ward}, ${district}, ${city}`;
+
+    //       const data = {
+    //         address: address,
+    //         ward: ward,
+    //         district: district,
+    //         city: city,
+    //         fullAddress: fullAddress,
+    //       };
+    //       return data;
+    //     }),
+    //   );
+
+      return dataGeocoding;
+
   }
 
   async findAll(pagination: Pagination) {
+
     // Giới hạn 1 page bao nhiêu item
     const limit = Number(pagination.limit) || 10;
     // Số page hiện tại
@@ -77,6 +105,7 @@ export class SpacesService {
 
   //Find by id
   async findById(id: number) {
+
     return await this.spacesRepository.findOne({
       where: {
         id: id,
