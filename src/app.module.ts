@@ -11,10 +11,11 @@ import { Districts } from './entity/districts.entity';
 import { Wards } from './entity/wards.entity';
 import { SurfacesModule } from './surfaces/surfaces.module';
 import { SpacesModule } from './spaces/spaces.module';
-import { ReportLocation } from './entity/reportLocation.entity';
-import { ReportBillboard } from './entity/reportBillboard.entity';
 import { FormReport } from './entity/form-report.entity';
-import { ReportsBillboardModule } from './reports-billboard/reports-billboard.module';
+import { ReportsSpaceModule } from './reports-space/reports-space.module';
+import { ReportSpace } from './entity/reportSpace.entity';
+import { ReportsSurfaceModule } from './reports-surface/reports-surface.module';
+import { ReportSurface } from './entity/reportSurface.entity';
 
 
 @Module({
@@ -26,12 +27,13 @@ import { ReportsBillboardModule } from './reports-billboard/reports-billboard.mo
       username: 'root',
       password: 'admin123',
       database: 'be_wnc',
-      entities: [SurfaceTypes, Surfaces, FormAdvertising, LocationTypes, Spaces, Districts, Wards, ReportBillboard, ReportLocation, FormReport],
+      entities: [SurfaceTypes, Surfaces, FormAdvertising, LocationTypes, Spaces, Districts, Wards, FormReport, ReportSpace, ReportSurface],
       synchronize: true,
     }),
     SurfacesModule,
     SpacesModule,
-    ReportsBillboardModule,
+    ReportsSpaceModule,
+    ReportsSurfaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

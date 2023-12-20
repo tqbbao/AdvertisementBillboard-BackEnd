@@ -1,7 +1,7 @@
 import { FormReport } from "src/entity/form-report.entity";
 import { Surfaces } from "src/entity/surfaces.entity";
 
-export class UpdateReportBillboard {
+export class CreateReportSurface {
   name: string;
   email: string;
   phone: string;

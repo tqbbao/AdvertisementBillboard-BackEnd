@@ -1,9 +1,9 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Spaces } from './spaces.entity';
 import { FormReport } from './form-report.entity';
-import { Surfaces } from './surfaces.entity';
 
-@Entity({ name: 'report_billboard' })
-export class ReportBillboard {
+@Entity({ name: 'report_space' })
+export class ReportSpace {
   @PrimaryGeneratedColumn({
     type: 'smallint',
     name: 'id',
@@ -39,13 +39,12 @@ export class ReportBillboard {
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 
-  @ManyToOne(() => FormReport, (formReport) => formReport.reportBillboards, {
+
+  @ManyToOne(() => FormReport, (formReport) => formReport.reportSpaces, {
     eager: true,
   })
   formReport: FormReport;
 
-  @ManyToOne(() => Surfaces, (surface) => surface.reportBillboards, {
-    eager: true,
-  })
-  surface: Surfaces;
+  @ManyToOne(() => Spaces, (space) => space.reportSpaces)
+  space: Spaces;
 }

@@ -3,7 +3,7 @@ import { FormAdvertising } from './form-advertising.entity';
 import { LocationTypes } from './location-types.entity';
 import { Surfaces } from './surfaces.entity';
 import { Wards } from './wards.entity';
-import { ReportLocation } from './reportLocation.entity';
+import { ReportSpace } from './reportSpace.entity';
 
 
 export enum Zoning {
@@ -62,8 +62,8 @@ export class Spaces {
   @ManyToOne(() => Wards, ward => ward.spaces, { eager: true })
   ward: Wards;
 
-  @OneToMany(() => ReportLocation, (reportLocation) => reportLocation.space)
-  reportLocations: ReportLocation[];
+  @OneToMany(() => ReportSpace, (reportSpace) => reportSpace.space)
+  reportSpaces: ReportSpace[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;

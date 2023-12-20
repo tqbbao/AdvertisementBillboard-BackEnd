@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { SurfaceTypes } from './surface-types.entity';
 import { Spaces } from './spaces.entity';
-import { ReportBillboard } from './reportBillboard.entity';
+import { ReportSurface } from './reportSurface.entity';
 
 @Entity({ name: 'surfaces' })
 export class Surfaces {
@@ -54,8 +54,8 @@ export class Surfaces {
   space: Spaces;
 
   @OneToMany(
-    () => ReportBillboard,
-    (reportBillboard) => reportBillboard.surface,
+    () => ReportSurface,
+    (reportSurface) => reportSurface.surface,
   )
-  reportBillboards: ReportBillboard[];
+  reportSurfaces: ReportSurface[];
 }

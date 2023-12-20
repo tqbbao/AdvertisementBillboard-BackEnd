@@ -1,7 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Reports } from './reports.entity';
-import { ReportLocation } from './reportLocation.entity';
-import { ReportBillboard } from './reportBillboard.entity';
+import { ReportSpace } from './reportSpace.entity';
+import { ReportSurface } from './reportSurface.entity';
 
 
 // Loại Report
@@ -36,11 +35,13 @@ export class FormReport {
   // @OneToMany(() => Reports, report => report.formReport)
   // reports: Reports[];
 
-  @OneToMany(() => ReportLocation, reportLocation => reportLocation.formReport)
-  reportLocations: ReportLocation[];
+  // @OneToMany(() => ReportLocation, reportLocation => reportLocation.formReport)
+  // reportLocations: ReportLocation[];
+  @OneToMany(() => ReportSpace, reportSpace => reportSpace.formReport)
+  reportSpaces: ReportSpace[];
 
-  @OneToMany(() => ReportBillboard, reportBillboard => reportBillboard.formReport)
-  reportBillboards: ReportBillboard[];
+  @OneToMany(() => ReportSurface, reportSurface => reportSurface.formReport)
+  reportSurfaces: ReportSurface[];
 
 
 }

@@ -1,12 +1,12 @@
 import { FormReport } from 'src/entity/form-report.entity';
-import { Surfaces } from 'src/entity/surfaces.entity';
+import { Spaces } from 'src/entity/spaces.entity';
 
-export class CreateReportBillboard {
+export class CreateReportSpaceDto {
   name: string;
   email: string;
   phone: string;
   content: string;
   imgUrl: string;
   formReport: FormReport;
-  surface: Surfaces;
+  space: Spaces;
 }
