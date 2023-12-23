@@ -4,13 +4,10 @@ import { LocationTypes } from './location-types.entity';
 import { Surfaces } from './surfaces.entity';
 import { Wards } from './wards.entity';
 import { ReportSpace } from './reportSpace.entity';
-
-
-export enum Zoning {
-    DAQUYHOACH = 'Đã quy hoạch',
-    CHUAQUYHOACH = 'Chưa quy hoạch',
-    DANGXULY = 'Đang xử lý',
-  }
+import { PendingSpace } from './pendingEditSpace.entity';
+import { SpaceZone } from 'src/common/enums/space-zone.enum';
+import { PendingSurface } from './pendingEditSurface.entity';
+import { Districts } from './districts.entity';
 
 @Entity({ name: 'spaces' })
 export class Spaces {
@@ -25,16 +22,13 @@ export class Spaces {
   @Column('varchar', { name: 'address', length: 255 })
   address: string;
 
-  // Khu vực (Phường, Quận)
-
-
   // Latitude
-  @Column('decimal', { name: 'latitude', precision: 10, scale: 6 })
+  @Column('decimal', { name: 'latitude'})
   latitude: number;
 
   // Longitude
-  @Column('decimal', { name: 'longtitude', precision: 10, scale: 6 })
-  longtitude: number;
+  @Column('decimal', { name: 'longitude'})
+  longitude: number;
 
   // Hình ảnh đặt bảng quảng cáo
   @Column('varchar', { name: 'img_url', length: 255, nullable: true })
@@ -43,27 +37,10 @@ export class Spaces {
   // Thông tin về điểm đặt đã được quy hoạch hay chưa?
   @Column({
     type: 'enum',
-    enum: Zoning,
-    default: Zoning.DANGXULY,
+    enum: SpaceZone,
+    default: SpaceZone.PLANNED,
   })
-  role: Zoning;
-
-  @OneToMany(() => Surfaces, (surface) => surface.space)
-  surface: Surfaces[];
-  
-
-  // Hình thức quảng cáo - FK
-  @ManyToOne(() => FormAdvertising, formAdvertising => formAdvertising.spaces, { eager: true })
-  formAdvertising: FormAdvertising;
-  // Loại vị trí - FK
-  @ManyToOne(() => LocationTypes, locationTypes => locationTypes.spaces,  { eager: true })
-  locationTypes: LocationTypes;
-
-  @ManyToOne(() => Wards, ward => ward.spaces, { eager: true })
-  ward: Wards;
-
-  @OneToMany(() => ReportSpace, (reportSpace) => reportSpace.space)
-  reportSpaces: ReportSpace[];
+  zone: SpaceZone;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
@@ -73,5 +50,36 @@ export class Spaces {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
+
+  // Hình thức quảng cáo (Cổ động chính trị/Quản cáo thương mại/Xã hội hóa) - FK
+  @ManyToOne(() => FormAdvertising, formAdvertising => formAdvertising.spaces, { eager: true })
+  formAdvertising: FormAdvertising;
+  // Loại vị trí (Đất công/Trung tâm thương mại/Chợ,.....) - FK
+  @ManyToOne(() => LocationTypes, locationTypes => locationTypes.spaces,  { eager: true })
+  locationTypes: LocationTypes;
+  // Khu vực (Phường, Quận) - FK
+  @ManyToOne(() => Wards, ward => ward.spaces, { eager: true })
+  ward: Wards;
+
+  @ManyToOne(() => Districts, district => district.spaces, { eager: true })
+  district: Districts;
+
+
+  
+
+  //? KHÔNG NẰM TRONG DATABASE
+  // Có nhiều bảng tạm quảng cáo
+  // @OneToMany(() => PendingSpace, (pendingSpace) => pendingSpace.editForSpace)
+  // pendingSpaces: PendingSpace[];
+
+  // Có nhiều bảng quảng cáo
+  @OneToMany(() => Surfaces, (surface) => surface.space)
+  surface: Surfaces[];
+
+
+
+  // 1 Space có nhiều reportSpace
+  @OneToMany(() => ReportSpace, (reportSpace) => reportSpace.space)
+  reportSpaces: ReportSpace[];
 
 }

@@ -11,6 +11,7 @@ import {
 import { SurfaceTypes } from './surface-types.entity';
 import { Spaces } from './spaces.entity';
 import { ReportSurface } from './reportSurface.entity';
+import { PendingSurface } from './pendingEditSurface.entity';
 
 @Entity({ name: 'surfaces' })
 export class Surfaces {
@@ -50,12 +51,17 @@ export class Surfaces {
   @ManyToOne(() => SurfaceTypes, (surfaceType) => surfaceType.surfaces)
   surfaceType: SurfaceTypes;
 
+  // Thuộc về điểm đặt nào? - FK
   @ManyToOne(() => Spaces, (space) => space.surface)
   space: Spaces;
 
+
+  //? KHÔNG NẰM TRONG DATABASE
   @OneToMany(
     () => ReportSurface,
     (reportSurface) => reportSurface.surface,
   )
   reportSurfaces: ReportSurface[];
+
+
 }

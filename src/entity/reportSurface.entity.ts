@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { FormReport } from './form-report.entity';
 import { Surfaces } from './surfaces.entity';
+import { ReportState } from 'src/common/enums/report-state.enum';
 
 @Entity({ name: 'report_surface' })
 export class ReportSurface {
@@ -37,6 +38,9 @@ export class ReportSurface {
 
   @Column('varchar', { name: 'img_url', length: 255, nullable: true })
   imgUrl: string;
+
+  @Column({ type: 'enum', enum: ReportState, default: ReportState.PENDING })
+  state: ReportState;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;

@@ -1,14 +1,19 @@
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Districts } from './districts.entity';
 import { Spaces } from './spaces.entity';
+import { PendingSpace } from './pendingEditSpace.entity';
+import { RequestEditSpace } from './requestEditSpace.entity';
 
 @Entity({ name: 'wards' })
 export class Wards {
@@ -26,33 +31,35 @@ export class Wards {
   })
   name: string;
 
-  @Column({
-    type: 'varchar',
-    length: 255,
-    name: 'ma_pk',
-    unique: true,
-  })
-  maPK: string;
+  // @Column({
+  //   type: 'varchar',
+  //   length: 255,
+  //   name: 'ma_pk',
+  //   unique: true,
+  // })
+  // maPK: string;
 
   // Quận - FK
   @ManyToOne(() => Districts, district => district.wards, { eager: true })
   district: Districts;
 
+  
+  
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
+  lastUpdate: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
+  
+  //? KHÔNG NẰM TRONG DATABASE
   @OneToMany(() => Spaces, space => space.ward)
   spaces: Spaces[];
 
-
-  @Column('timestamp', {
-    name: 'last_update',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  lastUpdate: Date;
-
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt: Date;
-
-
+  @OneToMany(() => RequestEditSpace, space => space.ward)
+  requestEditSpaces: RequestEditSpace[];
+  
+ 
 }

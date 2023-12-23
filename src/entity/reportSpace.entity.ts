@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Spaces } from './spaces.entity';
 import { FormReport } from './form-report.entity';
+import { ReportState } from 'src/common/enums/report-state.enum';
 
 @Entity({ name: 'report_space' })
 export class ReportSpace {
@@ -29,6 +30,9 @@ export class ReportSpace {
 
   @Column('varchar', { name: 'img_url', length: 255, nullable: true })
   imgUrl: string;
+  
+  @Column({ type: 'enum', enum: ReportState, default: ReportState.PENDING })
+  state: ReportState;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
@@ -39,12 +43,14 @@ export class ReportSpace {
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
 
-
   @ManyToOne(() => FormReport, (formReport) => formReport.reportSpaces, {
     eager: true,
   })
   formReport: FormReport;
 
-  @ManyToOne(() => Spaces, (space) => space.reportSpaces)
+  @ManyToOne(() => Spaces, (space) => space.reportSpaces, {eager: true })
   space: Spaces;
+
+
+  
 }

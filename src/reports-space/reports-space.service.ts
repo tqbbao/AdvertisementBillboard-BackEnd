@@ -12,6 +12,45 @@ export class ReportsSpaceService {
     private readonly reportSpaceRepository: Repository<ReportSpace>,
   ) {}
 
+  //Find all report spaces
+  async findAllReportSpaces() {
+    return await this.reportSpaceRepository.find({
+      relations: {
+        formReport: true,
+        space: true,
+      },
+    });
+  }
+
+  //Find all report spaces by space district id
+  async findAllReportSpacesBySpaceDistrictId(spaceDistrictId: number) {
+    return await this.reportSpaceRepository.find({
+      where: {
+        space: { district: { id: spaceDistrictId } },
+      },
+      relations: {
+        formReport: true,
+        space: true,
+      },
+    });
+  }
+
+  //Find all report spaces by ward id and space district id
+  async findAllReportSpacesByWardIdAndSpaceDistrictId(
+    wardId: number,
+    spaceDistrictId: number,
+  ) {
+    return await this.reportSpaceRepository.find({
+      where: {
+        space: { ward: { id: wardId, district: { id: spaceDistrictId } } },
+      },
+      relations: {
+        formReport: true,
+        space: true,
+      },
+    });
+  }
+
   //Find report space by id
   async findReportSpaceById(id: number) {
     return await this.reportSpaceRepository.findOne({

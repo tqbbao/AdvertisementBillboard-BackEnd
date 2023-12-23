@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,10 +8,16 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SurfacesService } from './surfaces.service';
 import { CreateSurfaceDto } from './dto/create-surface.dto';
 import { UpdateSurfaceDto } from './dto/update-surface.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/common/multer/config';
+import { Response } from 'express';
 
 @Controller('surfaces')
 export class SurfacesController {
@@ -24,17 +31,45 @@ export class SurfacesController {
 
   //Create a new surface
   @Post()
-  async createSurface(@Body() data: CreateSurfaceDto) {
-    return await this.surfacesService.createSurface(data);
+  @UseInterceptors(FileInterceptor('imgUrl', multerOptions('surfaces')))
+  async createSurface(
+    @Req() req: any,
+    @Body() data: CreateSurfaceDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (req.fileValidationError) {
+      throw new BadRequestException(req.fileValidationError);
+    }
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
+    const fullFilePath = `${file.destination}/${file.filename}`;
+    return await this.surfacesService.createSurface({
+      ...data,
+      imgUrl: fullFilePath,
+    });
   }
 
   //Update a surface
   @Put(':id')
+  @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
   async updateSurface(
+    @Req() req: any,
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateSurfaceDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.surfacesService.updateSurface(id, data);
+    if (req.fileValidationError) {
+      throw new BadRequestException(req.fileValidationError);
+    }
+    if (!file) {
+      throw new BadRequestException('File is required');
+    }
+    const fullFilePath = `${file.destination}/${file.filename}`;
+    return await this.surfacesService.updateSurface(id, {
+      ...data,
+      imgUrl: fullFilePath,
+    });
   }
 
   @Delete(':id')

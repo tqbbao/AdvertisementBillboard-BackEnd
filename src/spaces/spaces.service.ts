@@ -5,55 +5,25 @@ import { Repository } from 'typeorm';
 import { Pagination } from './dto/pagination';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
-import { HttpService } from '@nestjs/axios';
-import { map } from 'rxjs';
+import { removeFile } from 'src/common/multer/config';
+import { ReverseGeocodingService } from 'src/reverse-geocoding/reverse-geocoding.service';
 
 @Injectable()
 export class SpacesService {
   constructor(
     @InjectRepository(Spaces)
     private spacesRepository: Repository<Spaces>,
-    private readonly httpService: HttpService,
+    private readonly rere: ReverseGeocodingService,
+
   ) {}
 
   async reverseGeocoding(lat: number, long: number) {
-
-    const dataGeocoding = await this.httpService
-      .get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?access_token=pk.eyJ1Ijoibmh1dHBoYW1kZXYiLCJhIjoiY2xvbGcwZm5sMG1lMDJpbnJuemNmYm1xYyJ9.w9hEet44dcjmTnu7LWUkWQ`,
-      )
-      .pipe(map((response) => response.data));
-    // const dataGeocoding = await this.httpService
-    //   .get(
-    //     `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?access_token=pk.eyJ1Ijoibmh1dHBoYW1kZXYiLCJhIjoiY2xvbGcwZm5sMG1lMDJpbnJuemNmYm1xYyJ9.w9hEet44dcjmTnu7LWUkWQ`,
-    //   )
-    //   .pipe(
-    //     map((response) => {
-    //       console.log("object")
-    //       const features = response.data.features;
-    //       let address = features[0].text;
-    //       const ward = features[1].text;
-    //       const district = features[3].text;
-    //       const city = features[4].text;
-    //       const fullAddress = `${address}, ${ward}, ${district}, ${city}`;
-
-    //       const data = {
-    //         address: address,
-    //         ward: ward,
-    //         district: district,
-    //         city: city,
-    //         fullAddress: fullAddress,
-    //       };
-    //       return data;
-    //     }),
-    //   );
-
-      return dataGeocoding;
-
+    const dataGeocoding = await this.rere.reverseGeocoding(lat, long);
+    console.log(dataGeocoding);
+    return dataGeocoding;
   }
 
   async findAll(pagination: Pagination) {
-
     // Giới hạn 1 page bao nhiêu item
     const limit = Number(pagination.limit) || 10;
     // Số page hiện tại
@@ -94,7 +64,7 @@ export class SpacesService {
     return await this.spacesRepository.find({
       where: {
         latitude: lat,
-        longtitude: long,
+        longitude: long,
       },
       relations: {
         formAdvertising: true,
@@ -105,7 +75,6 @@ export class SpacesService {
 
   //Find by id
   async findById(id: number) {
-
     return await this.spacesRepository.findOne({
       where: {
         id: id,
@@ -120,6 +89,9 @@ export class SpacesService {
   //Create new space
   async createSpace(data: CreateSpaceDto) {
     try {
+      // const dataGeocoding = await this.reverseGeocoding(lat, long);
+      // const data1 = {...data, ...dataGeocoding};
+      // console.log(data1);
       const space = await this.spacesRepository.create(data);
       return await this.spacesRepository.save(space);
     } catch (error) {
@@ -134,7 +106,7 @@ export class SpacesService {
       if (!space) {
         throw new Error('Space not found');
       }
-      //space.lastUpdate = new Date();
+      removeFile(space.imgUrl);
       space = { ...space, ...data };
       return await this.spacesRepository.save(space);
     } catch (error) {

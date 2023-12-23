@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Surfaces } from './surfaces.entity';
+import { PendingSurface } from './pendingEditSurface.entity';
 
 @Entity({ name: 'surface_types' })
 export class SurfaceTypes {
@@ -17,18 +18,18 @@ export class SurfaceTypes {
   })
   name: string;
 
-  @Column('timestamp', {
-    name: 'last_update',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  lastUpdate: Date;
-
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
+  lastUpdate: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
+
+  //? KHÔNG NẰM TRONG DATABASE
   @OneToMany(() => Surfaces, (surface) => surface.surfaceType)
   surfaces: Surfaces[];
+
+  
 }

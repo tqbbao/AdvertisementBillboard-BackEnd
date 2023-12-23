@@ -1,5 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Wards } from './wards.entity';
+import { Spaces } from './spaces.entity';
+import { RequestEditSpace } from './requestEditSpace.entity';
 
 @Entity({ name: 'districts' })
 export class Districts {
@@ -17,28 +19,27 @@ export class Districts {
   })
   name: string;
 
-  @Column({
-    type: 'varchar',
-    length: 255,
-    name: 'ma_qh',
-    unique: true,
-  })
-  maQH: string;
+  
 
   @OneToMany(() => Wards, ward => ward.district)
   wards: Wards[];
 
+  @OneToMany(() => Spaces, space => space.district)
+  spaces: Spaces[];
 
-  @Column('timestamp', {
-    name: 'last_update',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @OneToMany(() => RequestEditSpace, space => space.district)
+  requestEditSpaces: RequestEditSpace[];
+
+
+
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
   lastUpdate: Date;
 
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
 
 }

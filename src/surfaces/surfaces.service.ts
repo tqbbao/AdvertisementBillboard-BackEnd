@@ -4,6 +4,7 @@ import { Surfaces } from 'src/entity/surfaces.entity';
 import { Repository } from 'typeorm';
 import { CreateSurfaceDto } from './dto/create-surface.dto';
 import { UpdateSurfaceDto } from './dto/update-surface.dto';
+import { removeFile } from 'src/common/multer/config';
 
 @Injectable()
 export class SurfacesService {
@@ -55,6 +56,7 @@ export class SurfacesService {
       if (!surface) {
         throw new Error('Surface not found');
       }
+      removeFile(surface.imgUrl);
       surface = { ...surface, ...data };
       return await this.surfacesRepository.save(surface);
     } catch (error) {

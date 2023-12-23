@@ -1,7 +1,8 @@
 import { IsNotEmpty } from "class-validator";
+import { SpaceZone } from "src/common/enums/space-zone.enum";
 import { FormAdvertising } from "src/entity/form-advertising.entity";
 import { LocationTypes } from "src/entity/location-types.entity";
-import { Zoning } from "src/entity/spaces.entity";
+// import { Zoning } from "src/entity/spaces.entity";
 import { Wards } from "src/entity/wards.entity";
 
 export class UpdateSpaceDto {
@@ -16,8 +17,8 @@ export class UpdateSpaceDto {
 
   imgUrl: string;
 
-  role: Zoning;
-
+  zone: SpaceZone;
+  
   @IsNotEmpty()
   formAdvertising: FormAdvertising;
 

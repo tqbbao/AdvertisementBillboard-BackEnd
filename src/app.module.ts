@@ -16,24 +16,38 @@ import { ReportsSpaceModule } from './reports-space/reports-space.module';
 import { ReportSpace } from './entity/reportSpace.entity';
 import { ReportsSurfaceModule } from './reports-surface/reports-surface.module';
 import { ReportSurface } from './entity/reportSurface.entity';
+import { RequestEditSpace } from './entity/requestEditSpace.entity';
+import { WardsModule } from './wards/wards.module';
+import { ReverseGeocodingModule } from './reverse-geocoding/reverse-geocoding.module';
+import { ConfigModule } from '@nestjs/config';
+import { DistrictsModule } from './districts/districts.module';
+import { RequestSpaceModule } from './request-space/request-space.module';
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // Đặt isGlobal để có thể sử dụng ConfigService ở mọi nơi trong ứng dụng
+      envFilePath: ['.env', '.env.development'], // Danh sách các tệp .env để đọc (tùy chọn)
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'admin123',
-      database: 'be_wnc',
-      entities: [SurfaceTypes, Surfaces, FormAdvertising, LocationTypes, Spaces, Districts, Wards, FormReport, ReportSpace, ReportSurface],
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [SurfaceTypes, Surfaces, FormAdvertising, LocationTypes, Spaces, Districts, Wards, FormReport, ReportSpace, ReportSurface,RequestEditSpace],
       synchronize: true,
     }),
     SurfacesModule,
     SpacesModule,
     ReportsSpaceModule,
     ReportsSurfaceModule,
+    WardsModule,
+    ReverseGeocodingModule,
+    DistrictsModule,
+    RequestSpaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

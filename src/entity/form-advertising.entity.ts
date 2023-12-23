@@ -1,5 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Spaces } from './spaces.entity';
+import { PendingSpace } from './pendingEditSpace.entity';
+import { RequestEditSpace } from './requestEditSpace.entity';
 
 @Entity({ name: 'form_advertising' })
 export class FormAdvertising {
@@ -17,19 +19,24 @@ export class FormAdvertising {
   })
   name: string;
 
-  @Column('timestamp', {
-    name: 'last_update',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  lastUpdate: Date;
-
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
+  lastUpdate: Date;
 
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
+
+
+
+  //? KHÔNG NẰM TRONG DATABASE
   @OneToMany(() => Spaces, space => space.formAdvertising)
   spaces: Spaces[];
+
+  @OneToMany(() => RequestEditSpace, space => space.formAdvertising)
+  requestEditSpaces: RequestEditSpace[];
+
+
+
 }
