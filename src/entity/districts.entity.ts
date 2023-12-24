@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryG
 import { Wards } from './wards.entity';
 import { Spaces } from './spaces.entity';
 import { RequestEditSpace } from './requestEditSpace.entity';
+import { User } from './user.entity';
 
 @Entity({ name: 'districts' })
 export class Districts {
@@ -29,6 +30,9 @@ export class Districts {
 
   @OneToMany(() => RequestEditSpace, space => space.district)
   requestEditSpaces: RequestEditSpace[];
+
+  @OneToMany(() => User, user => user.district)
+  users: User[];
 
 
 

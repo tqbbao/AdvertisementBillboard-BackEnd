@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   Req,
   UploadedFile,
   UseInterceptors,
@@ -18,11 +19,24 @@ import { UpdateSurfaceDto } from './dto/update-surface.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
+import { PaginationSurface } from './dto/pagination';
 
 @Controller('surfaces')
 export class SurfacesController {
   constructor(private surfacesService: SurfacesService) {}
 
+  //Find all surfaces
+  @Get()
+  async findAll() {
+    return await this.surfacesService.findAll();
+  }
+
+
+  //Find all by area
+  @Get('/area')
+  async findAllByArea(@Query() pagination: PaginationSurface) {
+    return await this.surfacesService.findAllByArea(pagination);
+  }
   //Find all surfaces by space id
   @Get(':id')
   async findAllBySpaceId(@Param('id', ParseIntPipe) id: number) {
@@ -81,4 +95,6 @@ export class SurfacesController {
   restore(@Param('id') id: number) {
     return this.surfacesService.restoreSurface(id);
   }
+
+  
 }

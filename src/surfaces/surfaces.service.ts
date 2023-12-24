@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateSurfaceDto } from './dto/create-surface.dto';
 import { UpdateSurfaceDto } from './dto/update-surface.dto';
 import { removeFile } from 'src/common/multer/config';
+import { PaginationSurface } from './dto/pagination';
 
 @Injectable()
 export class SurfacesService {
@@ -12,6 +13,33 @@ export class SurfacesService {
     @InjectRepository(Surfaces)
     private surfacesRepository: Repository<Surfaces>,
   ) {}
+
+  //Find all surfaces
+  async findAll() {
+    return this.surfacesRepository.find({
+      relations: {
+        space: true,
+        surfaceType: true,
+      },
+    });
+  }
+
+  //Find all by area
+  async findAllByArea(pagination: PaginationSurface) {
+    console.log(pagination)
+    const ward = pagination.ward;
+    const district = pagination.district;
+
+    return this.surfacesRepository.find({
+      where: {
+        space: {
+          district: { id: district },
+          ward: { id: ward },
+        },
+      },
+      relations: ['space', 'surfaceType'], 
+    });
+  }
 
   //Find all surfaces by space id
   async findAllBySpaceId(spaceId: number) {

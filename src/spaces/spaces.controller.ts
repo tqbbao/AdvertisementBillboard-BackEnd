@@ -33,6 +33,12 @@ export class SpacesController {
     return await this.spacesService.findAll(pagination);
   }
 
+  
+  @Get('/area')
+  async findAllByArea(@Query() pagination: Pagination) {
+    return await this.spacesService.findAllByArea(pagination);
+  }
+
   @Get(':lat,:long')
   async findByLatLong(@Param('lat') lat: number, @Param('long') long: number) {
     return await this.spacesService.findByLatLong(lat, long);
@@ -63,7 +69,6 @@ export class SpacesController {
     return await this.spacesService.createSpace({
       ...data,
       imgUrl: fullFilePath,
-      
     });
   }
 
@@ -112,4 +117,5 @@ export class SpacesController {
 
     return res.sendFile(file.filename, { root: file.destination });
   }
+
 }

@@ -1,9 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-export enum UserRole {
-    CB_PHUONG = 'Cán bộ Phường',
-    CB_QUAN = 'Cán bộ Quận',
-    CD_SOVHTT = 'Cán bộ Sở VHTT',
-  }
+import { UserRole } from 'src/common/enums/user-role.enum';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Wards } from './wards.entity';
+import { Districts } from './districts.entity';
+import { Exclude } from 'class-transformer';
 @Entity({ name: 'user' })
 export class User {
   @PrimaryGeneratedColumn({
@@ -16,43 +15,58 @@ export class User {
   @Column({
     type: 'varchar',
     length: 255,
-    name: 'full_name',
+    name: 'name',
   })
-  fullName: string;
+  name: string;
+
+  @Column('timestamp', {
+    name: 'birth',
+  })
+  birth: Date;
 
   @Column('varchar', { unique: true, name: 'email', length: 45 })
   email: string;
 
+  @Column('varchar', { name: 'phone', length: 15 })
+  phone: string;
+
+  @Exclude()
   @Column('varchar', { name: 'username', length: 255 })
   username: string;
 
+  @Exclude()
   @Column('varchar', { name: 'password', length: 255 })
   password: string;
 
-  @Column('varchar', { name: 'phone', length: 15 })
-  phone: string;
-  
+  @Exclude()
+  @Column({ nullable: true })
+  opt: string; // Trường opt
+
+  @Exclude()
+  @Column('varchar', { nullable: true, name: 'refresh_token', length: 255 })
+  refreshToken: string;
+
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: null,
   })
   role: UserRole;
 
-  @Column('timestamp', {
-    name: 'date_of_birth',
-  })
-  dateOfBirth: Date;
+  @ManyToOne(() => Wards, ward => ward.users, { eager: true, nullable: true })
+  ward: Wards;
 
-  @Column('timestamp', {
-    name: 'last_update',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
+  @ManyToOne(() => Districts, district => district.users, { eager: true, nullable: true })
+  district: Districts;
+
+
+
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'last_update', type: 'timestamp' })
   lastUpdate: Date;
 
-  @Column('timestamp', {
-    name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt: Date;
 }

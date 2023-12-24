@@ -7,6 +7,7 @@ import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
 import { removeFile } from 'src/common/multer/config';
 import { ReverseGeocodingService } from 'src/reverse-geocoding/reverse-geocoding.service';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class SpacesService {
@@ -14,12 +15,18 @@ export class SpacesService {
     @InjectRepository(Spaces)
     private spacesRepository: Repository<Spaces>,
     private readonly rere: ReverseGeocodingService,
-
+    private mailerService: MailerService,
   ) {}
 
   async reverseGeocoding(lat: number, long: number) {
     const dataGeocoding = await this.rere.reverseGeocoding(lat, long);
     console.log(dataGeocoding);
+
+    // const result = await this.mailerService.sendMail({
+    //   to: 'tempsampleindex123@gmail.com', // Địa chỉ email người nhận
+    //   subject: 'Subject of the Email', // Tiêu đề của email
+    //   html: '<p>Content of the Email</p>', // Nội dung của email (HTML)
+    // });
     return dataGeocoding;
   }
 
@@ -30,6 +37,8 @@ export class SpacesService {
     const page = Number(pagination.page) || 1;
     // Tính skip bao nhiêu item
     const skip = (page - 1) * limit;
+
+    //
 
     const [data, total] = await this.spacesRepository.findAndCount({
       relations: {
@@ -57,6 +66,26 @@ export class SpacesService {
         prevPage,
       },
     };
+  }
+
+  //Find all spaces by area
+  async findAllByArea(pagination: Pagination) {
+    
+    const ward = pagination.ward ;
+    const district = pagination.district;
+
+    return await this.spacesRepository.find({
+      where: [
+        { district: { id: district } },
+        { ward: { id: ward } },
+      ],
+      relations: {
+        formAdvertising: true,
+        locationTypes: true,
+        ward: true,
+        district: true,
+      },
+    });
   }
 
   //Find by (lat, long)

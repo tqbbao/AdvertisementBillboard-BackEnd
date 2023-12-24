@@ -1,3 +1,4 @@
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,10 +20,15 @@ import { ReportSurface } from './entity/reportSurface.entity';
 import { RequestEditSpace } from './entity/requestEditSpace.entity';
 import { WardsModule } from './wards/wards.module';
 import { ReverseGeocodingModule } from './reverse-geocoding/reverse-geocoding.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DistrictsModule } from './districts/districts.module';
 import { RequestSpaceModule } from './request-space/request-space.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
+import { join } from 'path';
+import { User } from './entity/user.entity';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -37,7 +43,20 @@ import { RequestSpaceModule } from './request-space/request-space.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [SurfaceTypes, Surfaces, FormAdvertising, LocationTypes, Spaces, Districts, Wards, FormReport, ReportSpace, ReportSurface,RequestEditSpace],
+      entities: [
+        SurfaceTypes,
+        Surfaces,
+        FormAdvertising,
+        LocationTypes,
+        Spaces,
+        Districts,
+        Wards,
+        FormReport,
+        ReportSpace,
+        ReportSurface,
+        RequestEditSpace,
+        User,
+      ],
       synchronize: true,
     }),
     SurfacesModule,
@@ -48,6 +67,32 @@ import { RequestSpaceModule } from './request-space/request-space.module';
     ReverseGeocodingModule,
     DistrictsModule,
     RequestSpaceModule,
+    MailerModule.forRootAsync({
+      imports: [ConfigModule], // Import ConfigModule để sử dụng ConfigService
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          host: configService.get('MAIL_HOST'),
+          secure: false,
+          auth: {
+            user: configService.get('MAIL_USER'),
+            pass: configService.get('MAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: `"No Reply" <${configService.get('MAIL_FROM')}>`,
+        },
+        // template: {
+        //   dir: process.cwd() + '/templates/email',
+        //   adapter: new HandlebarsAdapter(), // Sử dụng HandlebarsAdapter
+        //   options: {
+        //     strict: true,
+        //   },
+        // },
+      }),
+      inject: [ConfigService], // Inject ConfigService để sử dụng cấu hình
+    }),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
