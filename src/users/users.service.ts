@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -28,8 +29,19 @@ export class UsersService {
   }
 
   //Update user
-  async update(id: number, user: User) {
-    return await this.userRepository.update(id, user);
+  async update(id: number, data: UpdateUserDto) {
+    try {
+      console.log(data)
+      let user = await this.findById(id);
+      if (!user) {
+        throw new Error('User not found');
+      }
+      user = { ...user, ...data };
+      console.log(user)
+      return await this.userRepository.save(user);
+    } catch (error) {
+      throw error;
+    }
   }
 
   //find by email
@@ -37,5 +49,17 @@ export class UsersService {
     return await this.userRepository.findOne({
       where: { email },
     });
+  }
+
+  //change password
+  async changePassword(id: number, password: string) {
+    const users = await this.findById(id);
+    if (!users) {
+      throw new UnauthorizedException('User not found');
+    }
+    await this.userRepository.update(id, { password: password });
+    return {
+      message: 'Password changed successfully',
+    };
   }
 }

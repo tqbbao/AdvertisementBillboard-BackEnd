@@ -12,5 +12,4 @@ export class CreateUserDto {
     role: UserRole;
     ward: Wards;
     district: Districts;
-    
 }

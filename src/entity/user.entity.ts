@@ -39,8 +39,8 @@ export class User {
   password: string;
 
   @Exclude()
-  @Column({ nullable: true })
-  opt: string; // Trường opt
+  @Column('varchar',{ name:'otp', nullable: true })
+  otp: string; // Trường opt
 
   @Exclude()
   @Column('varchar', { nullable: true, name: 'refresh_token', length: 255 })

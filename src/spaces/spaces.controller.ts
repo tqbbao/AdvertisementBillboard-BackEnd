@@ -109,12 +109,10 @@ export class SpacesController {
   uploadFile(@Res() res: Response, @UploadedFile() file: Express.Multer.File) {
     console.log(file);
     //`${file.destination}/${file.filename}`
-
     //1703130360545-FB_IMG_1600578098052.jpg
     console.log(file.filename);
     //./uploads/spaces
     console.log(file.destination);
-
     return res.sendFile(file.filename, { root: file.destination });
   }
 
