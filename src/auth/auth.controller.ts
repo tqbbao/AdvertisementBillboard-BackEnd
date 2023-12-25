@@ -3,6 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  HttpCode,
   Post,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,6 +21,7 @@ export class AuthController {
   //     return await this.authService.signUp(signUpData);
   //   }
 
+  @HttpCode(200)
   @Post('signin')
   async login(@CurrentUser() currentUser, @Body() data: SignInUserDto) {
     const { access_token, refresh_token, user } =
