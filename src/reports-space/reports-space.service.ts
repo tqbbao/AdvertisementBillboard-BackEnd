@@ -4,6 +4,7 @@ import { ReportSpace } from 'src/entity/reportSpace.entity';
 import { Repository } from 'typeorm';
 import { CreateReportSpaceDto } from './dto/create-reportSpace.dto';
 import { UpdateReportSpaceDto } from './dto/update-reportSpace.dto';
+import { ReportState } from 'src/common/enums/report-state.enum';
 
 @Injectable()
 export class ReportsSpaceService {
@@ -103,6 +104,21 @@ export class ReportsSpaceService {
   async restoreReportSpace(id: number) {
     try {
       return await this.reportSpaceRepository.restore(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //accept report space
+  async acceptReportSpace(id: number) {
+    try {
+      const reportSpace = await this.findReportSpaceById(id);
+      if (!reportSpace) {
+        throw new Error('Report space not found');
+      }
+      await this.reportSpaceRepository.update(id, {
+        state: ReportState.PROCESSED,
+      });
     } catch (error) {
       throw error;
     }

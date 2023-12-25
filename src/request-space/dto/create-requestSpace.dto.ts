@@ -1,3 +1,4 @@
+import { RequestState } from "src/common/enums/request-state.enum";
 import { SpaceZone } from "src/common/enums/space-zone.enum";
 import { Districts } from "src/entity/districts.entity";
 import { FormAdvertising } from "src/entity/form-advertising.entity";

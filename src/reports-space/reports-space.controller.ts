@@ -29,8 +29,14 @@ export class ReportsSpaceController {
     return await this.reportsSpaceService.findAllReportSpaces();
   }
 
+  //Find report space by id
+  @Get(':id')
+  async findReportSpaceById(@Param('id', ParseIntPipe) id: number) {
+    return await this.reportsSpaceService.findReportSpaceById(id);
+  }
+
   //Find all report spaces by space district id
-  @Get('/:id')
+  @Get('/district/:id')
   async findAllReportSpacesBySpaceDistrictId(
     @Param('id', ParseIntPipe) id: number,
   ) {

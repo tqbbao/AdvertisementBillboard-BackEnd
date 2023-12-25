@@ -12,6 +12,7 @@ import { ReverseGeocodingModule } from 'src/reverse-geocoding/reverse-geocoding.
   imports: [TypeOrmModule.forFeature([Spaces]), ReverseGeocodingModule],
 
   controllers: [SpacesController],
-  providers: [SpacesService,]
+  providers: [SpacesService,],
+  exports: [SpacesService],
 })
 export class SpacesModule {}

@@ -28,7 +28,7 @@ import { Response } from 'express';
 export class SpacesController {
   constructor(private spacesService: SpacesService) {}
 
-  @Get('/pagination')
+  @Get()
   async findAll(@Query() pagination: Pagination) {
     return await this.spacesService.findAll(pagination);
   }

@@ -14,10 +14,16 @@ import { RequestSpaceService } from './request-space.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { CreateRequestSpaceDto } from './dto/create-requestSpace.dto';
+import { UpdateRequestSpaceDto } from './dto/update-requestSpace.dto';
 
 @Controller('request-space')
 export class RequestSpaceController {
   constructor(private readonly requestSpaceService: RequestSpaceService) {}
+  //Find request edit space by id
+  @Get('/:id')
+  async findRequestEditSpaceById(@Param('id', ParseIntPipe) id: number) {
+    return await this.requestSpaceService.findRequestEditSpaceById(id);
+  }
 
   //Create a new request edit space
   @Post()
@@ -40,9 +46,23 @@ export class RequestSpaceController {
     });
   }
 
-  //Find request edit space by id
-  @Get('/:id')
-  async findRequestEditSpaceById(@Param('id', ParseIntPipe) id: number,) {
-    return await this.requestSpaceService.findRequestEditSpaceById(id);
+  // Aceept request edit space
+  @Post('/accept/:id')
+  async acceptRequestEditSpace(@Param('id', ParseIntPipe) id: number) {
+    return await this.requestSpaceService.acceptRequestEditSpace(id);
+  }
+
+  //Decline request edit space
+  @Post('/decline/:id')
+  async declineRequestEditSpace(@Param('id', ParseIntPipe) id: number) {
+    return await this.requestSpaceService.declineRequestEditSpace(id);
+  }
+
+  //send Email To User Report Space
+  @Post('/send-email/:id')
+  async sendEmailToUserReportSpace(@Param('id', ParseIntPipe) id: number) {
+    return await this.requestSpaceService.sendMailToUserWhenRequestEditSpaceIsAccepted(
+      id,
+    );
   }
 }

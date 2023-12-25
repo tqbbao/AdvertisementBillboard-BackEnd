@@ -20,6 +20,15 @@ export class Districts {
   })
   name: string;
 
+  // Latitude
+  @Column('decimal', { name: 'latitude', precision: 10, scale: 6})
+  latitude: number;
+
+  // Longitude
+  @Column('decimal', { name: 'longitude', precision: 10, scale: 6})
+  longitude: number;
+
+
   
 
   @OneToMany(() => Wards, ward => ward.district)

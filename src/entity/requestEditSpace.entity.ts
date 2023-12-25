@@ -17,6 +17,7 @@ import { FormAdvertising } from './form-advertising.entity';
 import { LocationTypes } from './location-types.entity';
 import { Wards } from './wards.entity';
 import { Districts } from './districts.entity';
+import { RequestState } from 'src/common/enums/request-state.enum';
 @Entity({ name: 'request_edit_space' })
 export class RequestEditSpace {
   @PrimaryGeneratedColumn({
@@ -74,7 +75,8 @@ export class RequestEditSpace {
   district: Districts;
 
 
-
+  @Column({ type: 'enum', enum: RequestState, default: RequestState.PENDING })
+  state: RequestState;
 
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })

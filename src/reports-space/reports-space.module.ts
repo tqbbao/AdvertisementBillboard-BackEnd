@@ -7,6 +7,7 @@ import { ReportSpace } from 'src/entity/reportSpace.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([ReportSpace])],
   controllers: [ReportsSpaceController],
-  providers: [ReportsSpaceService]
+  providers: [ReportsSpaceService],
+  exports: [ReportsSpaceService],
 })
 export class ReportsSpaceModule {}

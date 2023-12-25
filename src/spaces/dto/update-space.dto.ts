@@ -1,5 +1,6 @@
 import { IsNotEmpty } from "class-validator";
 import { SpaceZone } from "src/common/enums/space-zone.enum";
+import { Districts } from "src/entity/districts.entity";
 import { FormAdvertising } from "src/entity/form-advertising.entity";
 import { LocationTypes } from "src/entity/location-types.entity";
 // import { Zoning } from "src/entity/spaces.entity";
@@ -27,4 +28,6 @@ export class UpdateSpaceDto {
 
   @IsNotEmpty()
   ward: Wards;
+
+  district: Districts;
 }
