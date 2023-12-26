@@ -50,7 +50,7 @@ export class SpacesController {
     try {
       const spaces = await this.spacesService.findAllByArea(pagination);
       if (spaces.length === 0) {
-        throw new CustomException('Not found', HttpStatus.NOT_FOUND);
+        return spaces;
       }
       return spaces;
     } catch (error) {
