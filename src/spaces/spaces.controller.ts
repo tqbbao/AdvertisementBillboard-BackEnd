@@ -5,6 +5,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -22,27 +24,55 @@ import { UpdateSpaceDto } from './dto/update-space.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
+import { CustomException } from 'src/common/exceptions/customException';
 
 @Controller('spaces')
 @UseInterceptors(ClassSerializerInterceptor)
 export class SpacesController {
   constructor(private spacesService: SpacesService) {}
 
+  @HttpCode(200)
   @Get()
   async findAll(@Query() pagination: Pagination) {
-    return await this.spacesService.findAll(pagination);
+    try {
+      const spaces = await this.spacesService.findAll(pagination);
+      if (spaces.data.length === 0) {
+        throw new CustomException('Not found', HttpStatus.NOT_FOUND);
+      }
+      return spaces;
+    } catch (error) {
+      throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
-
-  
+  @HttpCode(200)
   @Get('/area')
   async findAllByArea(@Query() pagination: Pagination) {
-    return await this.spacesService.findAllByArea(pagination);
+    try {
+      const spaces = await this.spacesService.findAllByArea(pagination);
+      if (spaces.length === 0) {
+        throw new CustomException('Not found', HttpStatus.NOT_FOUND);
+      }
+      return spaces;
+    } catch (error) {
+      throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
+  @HttpCode(200)
   @Get(':lat,:long')
   async findByLatLong(@Param('lat') lat: number, @Param('long') long: number) {
-    return await this.spacesService.findByLatLong(lat, long);
+    try {
+      const space = await this.spacesService.findByLatLong(lat, long);
+      if (!space) {
+        throw new CustomException('Not found', HttpStatus.NOT_FOUND);
+      }
+      return space;
+    } catch (error) {
+      throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
+
+  @HttpCode(200)
   @Get('/reversegeocoding/:lat,:long')
   async reverseGeocoding(
     @Param('lat') lat: number,
@@ -51,6 +81,7 @@ export class SpacesController {
     return await this.spacesService.reverseGeocoding(lat, long);
   }
 
+  @HttpCode(201)
   @Post()
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
   async create(
@@ -66,12 +97,20 @@ export class SpacesController {
     }
     const fullFilePath = `${file.destination}/${file.filename}`;
 
-    return await this.spacesService.createSpace({
-      ...data,
-      imgUrl: fullFilePath,
-    });
+    try {
+      const space = await this.spacesService.createSpace({
+        ...data,
+        imgUrl: fullFilePath,
+      });
+      return {
+        message: 'Create space successfully',}
+    } catch (error) {
+      throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
+    }
+    
   }
 
+  @HttpCode(200)
   @Put(':id')
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
   async update(
@@ -87,17 +126,31 @@ export class SpacesController {
       throw new BadRequestException('File is required');
     }
     const fullFilePath = `${file.destination}/${file.filename}`;
-    return await this.spacesService.updateSpace(id, {
-      ...data,
-      imgUrl: fullFilePath,
-    });
+
+    try {
+      const space = await this.spacesService.updateSpace(id, {
+        ...data,
+        imgUrl: fullFilePath,
+      });
+      if(!space){
+        throw new CustomException('Not found', HttpStatus.NOT_FOUND);
+      }
+      return {
+        message: 'Update space successfully',
+      }
+    } catch (error) {
+      throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
+    }
+    
   }
 
+  @HttpCode(200)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return await this.spacesService.removeSpace(id);
   }
 
+  @HttpCode(200)
   @Post(':id/restore')
   restore(@Param('id') id: number) {
     return this.spacesService.restoreSpace(id);
@@ -115,5 +168,4 @@ export class SpacesController {
     console.log(file.destination);
     return res.sendFile(file.filename, { root: file.destination });
   }
-
 }

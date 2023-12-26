@@ -8,6 +8,7 @@ import { RequestState } from 'src/common/enums/request-state.enum';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ReportsSpaceService } from 'src/reports-space/reports-space.service';
 import { SpacesService } from 'src/spaces/spaces.service';
+import { PaginationRequestSpace } from './dto/pagination';
 
 @Injectable()
 export class RequestSpaceService {
@@ -40,6 +41,23 @@ export class RequestSpaceService {
         district: true,
       },
     });
+  }
+
+  //Find all request edit space by area
+  async findAllByArea(pagination: PaginationRequestSpace) {
+    console.log(pagination.state)
+    return await this.requestEditSpaceRepository.find({
+      where: {
+        reportSpace: {
+          space: {
+            district: { id: pagination.district },
+            ward: { id: pagination.ward },
+          }
+        },
+        state: pagination.state
+      }
+    })
+    
   }
 
   // Aceept request edit space
@@ -123,9 +141,7 @@ export class RequestSpaceService {
         email: reportSpace.email,
         name: reportSpace.name,
         state: reportSpace.state,
-
       };
-
 
       await this.mailerService.sendMail({
         to: `${emailData.email}`, // Địa chỉ email người nhận
@@ -139,8 +155,6 @@ export class RequestSpaceService {
         <p>If you did not make this request, you can ignore this email or report it to Apple Support.</p>
         `, // Nội dung của email (HTML)
       });
-
-
     } catch (error) {
       throw error;
     }

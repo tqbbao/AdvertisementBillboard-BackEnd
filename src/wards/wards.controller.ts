@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { WardsService } from './wards.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
@@ -15,12 +15,14 @@ export class WardsController {
   // }
 
   //Find by district id
+  @HttpCode(200)
   @ApiOperation({ summary: 'Danh sách phường theo id quận' })
   @Get('/district/:id')
   async findByDistrictId(@Param('id', ParseIntPipe) id: number) {
     return await this.wardService.findByDistrictId(id);
   }
 
+  @HttpCode(200)
   //Find by id
   @ApiOperation({ summary: 'Danh sách phường theo id' })
   @Get('/:id')

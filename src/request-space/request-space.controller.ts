@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseInterceptors,
@@ -15,10 +16,16 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { CreateRequestSpaceDto } from './dto/create-requestSpace.dto';
 import { UpdateRequestSpaceDto } from './dto/update-requestSpace.dto';
+import { PaginationRequestSpace } from './dto/pagination';
 
 @Controller('request-space')
 export class RequestSpaceController {
   constructor(private readonly requestSpaceService: RequestSpaceService) {}
+  //Find all request edit space by area
+  @Get('/area')
+  async findAllByArea(@Query() pagination: PaginationRequestSpace) {
+    return await this.requestSpaceService.findAllByArea(pagination);
+  }
   //Find request edit space by id
   @Get('/:id')
   async findRequestEditSpaceById(@Param('id', ParseIntPipe) id: number) {

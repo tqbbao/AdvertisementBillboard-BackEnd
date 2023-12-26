@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Spaces } from 'src/entity/spaces.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Pagination } from './dto/pagination';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { UpdateSpaceDto } from './dto/update-space.dto';
@@ -70,7 +70,6 @@ export class SpacesService {
 
   //Find all spaces by area
   async findAllByArea(pagination: Pagination) {
-    
     const ward = pagination.ward ;
     const district = pagination.district;
 
@@ -90,7 +89,7 @@ export class SpacesService {
 
   //Find by (lat, long)
   async findByLatLong(lat: number, long: number) {
-    return await this.spacesRepository.find({
+    return await this.spacesRepository.findOne({
       where: {
         latitude: lat,
         longitude: long,
@@ -118,9 +117,6 @@ export class SpacesService {
   //Create new space
   async createSpace(data: CreateSpaceDto) {
     try {
-      // const dataGeocoding = await this.reverseGeocoding(lat, long);
-      // const data1 = {...data, ...dataGeocoding};
-      // console.log(data1);
       const space = await this.spacesRepository.create(data);
       return await this.spacesRepository.save(space);
     } catch (error) {
@@ -133,7 +129,8 @@ export class SpacesService {
     try {
       let space = await this.findById(id);
       if (!space) {
-        throw new Error('Space not found');
+        removeFile(data.imgUrl);
+        throw new NotFoundException('Space not found');
       }
       removeFile(space.imgUrl);
       space = { ...space, ...data };
@@ -148,7 +145,7 @@ export class SpacesService {
     try {
       let space = await this.findById(id);
       if (!space) {
-        throw new Error('Space not found');
+        throw new NotFoundException('Space not found');
       }
       return await this.spacesRepository.softDelete(id);
     } catch (error) {

@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsEnum, IsNotEmpty } from "class-validator";
 import { SpaceZone } from "src/common/enums/space-zone.enum";
 import { Districts } from "src/entity/districts.entity";
 import { FormAdvertising } from "src/entity/form-advertising.entity";
@@ -18,6 +18,7 @@ export class UpdateSpaceDto {
 
   imgUrl: string;
 
+  @IsEnum(SpaceZone, { message: 'Invalid zone value (Planned/UnPlanned)' })
   zone: SpaceZone;
   
   @IsNotEmpty()
@@ -29,5 +30,6 @@ export class UpdateSpaceDto {
   @IsNotEmpty()
   ward: Wards;
 
+  @IsNotEmpty()
   district: Districts;
 }

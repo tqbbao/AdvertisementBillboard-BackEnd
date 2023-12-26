@@ -12,6 +12,9 @@ import * as phoneToken from 'generate-sms-verification-code';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as path from 'path';
 import * as fs from 'fs';
+import { ForgotPasswordDto } from './dto/forgotPassword.dto';
+import { ResetPasswordWithOtpDto } from './dto/resetPasswordWithOtp.dto';
+import e from 'express';
 
 @Injectable()
 export class AuthService {
@@ -73,9 +76,9 @@ export class AuthService {
       refresh_token: rt,
     };
   }
-  async forgotPassword(email: string) {
+  async forgotPassword(data: ForgotPasswordDto) {
     const user = await this.userRepository.findOne({
-      where: { email: email },
+      where: { email: data.email },
     });
 
     if (!user) {
@@ -103,7 +106,7 @@ export class AuthService {
     }
 
     await this.mailerService.sendMail({
-      to: `${email}`, // Địa chỉ email người nhận
+      to: `${user.email}`, // Địa chỉ email người nhận
       subject: 'Subject of the Email', // Tiêu đề của email
       // html: `<p>Dear ${user.name},</p>
       // <p>You have selected <a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a> as your new Apple ID email address. To verify this email address belongs to you, enter the code below on the Apple ID website, verification page:</p>
@@ -157,6 +160,34 @@ export class AuthService {
       throw new UnauthorizedException('User not found');
     }
     const hashPassword = await this.hashPassword(password);
+    await this.userRepository.update(
+      { id: user.id },
+      { password: hashPassword },
+    );
+    return {
+      message: 'Reset password success',
+    };
+  }
+  async resetPasswordWithOtp(query: ForgotPasswordDto, data: ResetPasswordWithOtpDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: query.email,
+      },
+    });
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    } else if (user.otp === null || user.otp === undefined) {
+      throw new UnauthorizedException('OTP is not valid');
+    }
+
+    const isVerify = await bcrypt.compare(data.otp, user.otp);
+    if (!isVerify) {
+      throw new UnauthorizedException('OTP is not valid');
+    }
+
+    await this.userRepository.update({ id: user.id }, { otp: null });
+
+    const hashPassword = await this.hashPassword(data.password);
     await this.userRepository.update(
       { id: user.id },
       { password: hashPassword },

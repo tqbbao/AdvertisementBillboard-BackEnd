@@ -5,11 +5,14 @@ import {
   Get,
   HttpCode,
   Post,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInUserDto } from './dto/signIn.dto';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
+import { ForgotPasswordDto } from './dto/forgotPassword.dto';
+import { ResetPasswordWithOtpDto } from './dto/resetPasswordWithOtp.dto';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -45,19 +48,30 @@ export class AuthController {
     return await this.authService.refreshToken(refreshToken.refreshToken);
   }
 
+  @HttpCode(200)
   @Post('forgot-password')
-  async forgotPassword(@Body() email: { email: string }) {
-    return await this.authService.forgotPassword(email.email);
+  async forgotPassword(@Body() data: ForgotPasswordDto) {
+    return await this.authService.forgotPassword(data);
   }
 
+  @HttpCode(200)
   @Post('verify-otp')
   async verifyOtp(@Body() data: { otp: string; email: string }) {
     return await this.authService.verifyOtp(data.otp, data.email);
   }
 
+  @HttpCode(200)
   @Post('reset-password')
   async resetPassword(@Body() data: { password: string; email: string }) {
     return await this.authService.resetPassword(data.password, data.email);
+  }
+
+  @HttpCode(200)
+  @Post('reset-password-otp')
+  async resetPasswordOtp(
+    @Query() query: ForgotPasswordDto,
+    @Body() data: ResetPasswordWithOtpDto) {
+    return await this.authService.resetPasswordWithOtp(query, data);
   }
 
   

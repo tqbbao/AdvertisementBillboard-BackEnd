@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -25,13 +26,14 @@ import { PaginationSurface } from './dto/pagination';
 export class SurfacesController {
   constructor(private surfacesService: SurfacesService) {}
 
+  @HttpCode(200)
   //Find all surfaces
   @Get()
   async findAll() {
     return await this.surfacesService.findAll();
   }
 
-
+  @HttpCode(200)
   //Find all by area
   @Get('/area')
   async findAllByArea(@Query() pagination: PaginationSurface) {
@@ -43,6 +45,7 @@ export class SurfacesController {
     return await this.surfacesService.findAllBySpaceId(id);
   }
 
+  @HttpCode(201)
   //Create a new surface
   @Post()
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('surfaces')))
@@ -63,7 +66,7 @@ export class SurfacesController {
       imgUrl: fullFilePath,
     });
   }
-
+  @HttpCode(200)
   //Update a surface
   @Put(':id')
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
@@ -86,11 +89,13 @@ export class SurfacesController {
     });
   }
 
+  @HttpCode(200)
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return await this.surfacesService.removeSurface(id);
   }
 
+  @HttpCode(200)
   @Post(':id/restore')
   restore(@Param('id') id: number) {
     return this.surfacesService.restoreSurface(id);

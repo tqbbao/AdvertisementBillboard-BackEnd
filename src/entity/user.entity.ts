@@ -30,7 +30,7 @@ export class User {
   @Column('varchar', { name: 'phone', length: 15 })
   phone: string;
 
-  @Exclude()
+  //@Exclude()
   @Column('varchar', { name: 'username', length: 255 })
   username: string;
 

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateReportSpaceDto } from './dto/create-reportSpace.dto';
 import { UpdateReportSpaceDto } from './dto/update-reportSpace.dto';
 import { ReportState } from 'src/common/enums/report-state.enum';
+import { PaginationReportSpace } from './dto/pagination';
 
 @Injectable()
 export class ReportsSpaceService {
@@ -23,27 +24,29 @@ export class ReportsSpaceService {
     });
   }
 
-  //Find all report spaces by space district id
-  async findAllReportSpacesBySpaceDistrictId(spaceDistrictId: number) {
-    return await this.reportSpaceRepository.find({
-      where: {
-        space: { district: { id: spaceDistrictId } },
-      },
-      relations: {
-        formReport: true,
-        space: true,
-      },
-    });
-  }
+  // //Find all report spaces by space district id
+  // async findAllReportSpacesBySpaceDistrictId(spaceDistrictId: number) {
+  //   return await this.reportSpaceRepository.find({
+  //     where: {
+  //       space: { district: { id: spaceDistrictId } },
+  //     },
+  //     relations: {
+  //       formReport: true,
+  //       space: true,
+  //     },
+  //   });
+  // }
 
   //Find all report spaces by ward id and space district id
-  async findAllReportSpacesByWardIdAndSpaceDistrictId(
-    wardId: number,
-    spaceDistrictId: number,
+  async findAllByArea(
+    pagination: PaginationReportSpace,
   ) {
     return await this.reportSpaceRepository.find({
       where: {
-        space: { ward: { id: wardId, district: { id: spaceDistrictId } } },
+        space: {
+          district: { id: pagination.district },
+          ward: { id: pagination.ward },
+        },
       },
       relations: {
         formReport: true,
