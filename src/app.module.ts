@@ -29,6 +29,7 @@ import { join } from 'path';
 import { User } from './entity/user.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { FormReportsModule } from './form-reports/form-reports.module';
 
 @Module({
   imports: [
@@ -93,6 +94,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    FormReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
