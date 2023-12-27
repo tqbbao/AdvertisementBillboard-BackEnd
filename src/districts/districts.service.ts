@@ -10,6 +10,15 @@ export class DistrictsService {
     private districtRepository: Repository<Districts>,
   ) {}
 
+  //Find by IdGeo
+  async findByIdGeo(idGeo: string) {
+    return await this.districtRepository.find({
+      where: {
+        idGeo: idGeo,
+      },
+    });
+  }
+
   //Find by name
   async findByName(name: string) {
     return await this.districtRepository.findOne({

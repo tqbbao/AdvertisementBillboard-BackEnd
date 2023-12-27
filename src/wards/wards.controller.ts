@@ -1,4 +1,11 @@
-import { Controller, Get, HttpCode, Param, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { WardsService } from './wards.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
@@ -9,10 +16,12 @@ export class WardsController {
 
   // @ApiOperation({ summary: 'Tìm phường theo tên' })
   // @ApiQuery({ name: 'name', description: 'Tên phường', required: true })
-  // @Get()
-  // async findByName(@Query('name') name: string) {
-  //   return await this.wardService.findByName(name);
-  // }
+  @Get('/search/:id')
+  async findByIdGeo(@Param('id') id: string) {
+    return await this.wardService.findByIdGeo(id);
+  }
+
+  
 
   //Find by district id
   @HttpCode(200)

@@ -32,6 +32,14 @@ export class Wards {
   })
   name: string;
 
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'id_geo',
+    nullable: true,
+  })
+  idGeo: string;
+
   // @Column({
   //   type: 'varchar',
   //   length: 255,

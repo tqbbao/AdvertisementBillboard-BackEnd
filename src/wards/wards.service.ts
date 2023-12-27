@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Wards } from 'src/entity/wards.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 @Injectable()
 export class WardsService {
@@ -9,15 +9,16 @@ export class WardsService {
     @InjectRepository(Wards)
     private wardRepository: Repository<Wards>,
   ) {}
-
-  //Find by name
-  async findByName(name: string) {
-    return await this.wardRepository.findOne({
+  //Find by IdGeo
+  async findByIdGeo(idGeo: string) {
+    return await this.wardRepository.find({
       where: {
-        name: name,
+        idGeo: idGeo,
       },
     });
   }
+
+
 
   //Find by id
   async findById(id: number) {

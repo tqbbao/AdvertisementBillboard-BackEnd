@@ -29,6 +29,13 @@ export class Districts {
   longitude: number;
 
 
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'id_geo',
+    nullable: true,
+  })
+  idGeo: string;
   
 
   @OneToMany(() => Wards, ward => ward.district)

@@ -30,6 +30,7 @@ import { User } from './entity/user.entity';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FormReportsModule } from './form-reports/form-reports.module';
+import { RequestSurfaceModule } from './request-surface/request-surface.module';
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { FormReportsModule } from './form-reports/form-reports.module';
     UsersModule,
     AuthModule,
     FormReportsModule,
+    RequestSurfaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
