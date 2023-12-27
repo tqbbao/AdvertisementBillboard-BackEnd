@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateReportSurface } from './dto/create-reportSurface.dto';
 import { UpdateReportSurface } from './dto/update-reportSurface.dto';
 import { PaginationReportSurface } from './dto/pagination';
+import { ReportState } from 'src/common/enums/report-state.enum';
 
 @Injectable()
 export class ReportsSurfaceService {
@@ -97,4 +98,18 @@ export class ReportsSurfaceService {
       throw error;
     }
   }
+
+  // //Update state of report surface when send request edit space
+  // async updateStateReportSurface(id: number) {
+  //   try {
+  //     let reportSurface = await this.findReportSurfaceById(id);
+  //     if (!reportSurface) {
+  //       throw new Error('Report surface not found');
+  //     }
+  //     reportSurface = { ...reportSurface, state: ReportState.PROCESSING };
+  //     return await this.reportSurfaceRepository.save(reportSurface);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }

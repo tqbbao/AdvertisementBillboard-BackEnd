@@ -126,4 +126,20 @@ export class ReportsSpaceService {
       throw error;
     }
   }
+
+  //Update state of report space when send request edit space
+  async updateStateReportSpace(id: number) {
+    try {
+      let reportSpace = await this.findReportSpaceById(id);
+      if (!reportSpace) {
+        throw new Error('Report space not found');
+      }
+      reportSpace = { ...reportSpace, state: ReportState.PROCESSING };
+      return await this.reportSpaceRepository.save(reportSpace);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
 }

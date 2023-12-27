@@ -44,6 +44,7 @@ export class RequestEditSpace {
   @Column('decimal', { name: 'longitude'})
   longitude: number;
 
+  
   // Hình ảnh đặt bảng quảng cáo
   @Column('varchar', { name: 'img_url', length: 255, nullable: true })
   imgUrl: string;
