@@ -39,8 +39,15 @@ export class SurfacesController {
   async findAllByArea(@Query() pagination: PaginationSurface) {
     return await this.surfacesService.findAllByArea(pagination);
   }
+
+  //Find by id
+  @Get('/:id')
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    return await this.surfacesService.findById(id);
+  }
+
   //Find all surfaces by space id
-  @Get(':id')
+  @Get('space/:id')
   async findAllBySpaceId(@Param('id', ParseIntPipe) id: number) {
     return await this.surfacesService.findAllBySpaceId(id);
   }
@@ -100,6 +107,4 @@ export class SurfacesController {
   restore(@Param('id') id: number) {
     return this.surfacesService.restoreSurface(id);
   }
-
-  
 }

@@ -48,11 +48,11 @@ export class Surfaces {
   deletedAt: Date;
 
   // Loại bảng quảng cáo - FK
-  @ManyToOne(() => SurfaceTypes, (surfaceType) => surfaceType.surfaces)
+  @ManyToOne(() => SurfaceTypes, (surfaceType) => surfaceType.surfaces, {eager: true})
   surfaceType: SurfaceTypes;
 
   // Thuộc về điểm đặt nào? - FK
-  @ManyToOne(() => Spaces, (space) => space.surface)
+  @ManyToOne(() => Spaces, (space) => space.surface, {eager: true})
   space: Spaces;
 
 

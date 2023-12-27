@@ -4,6 +4,7 @@ import { ReportSurface } from 'src/entity/reportSurface.entity';
 import { Repository } from 'typeorm';
 import { CreateReportSurface } from './dto/create-reportSurface.dto';
 import { UpdateReportSurface } from './dto/update-reportSurface.dto';
+import { PaginationReportSurface } from './dto/pagination';
 
 @Injectable()
 export class ReportsSurfaceService {
@@ -11,6 +12,34 @@ export class ReportsSurfaceService {
     @InjectRepository(ReportSurface)
     private readonly reportSurfaceRepository: Repository<ReportSurface>,
   ) {}
+
+  //Find all report surfaces
+  async findAllReportSurfaces() {
+    return await this.reportSurfaceRepository.find({
+      relations: {
+        formReport: true,
+        surface: true,
+      },
+    });
+  }
+
+  //Find all report surfaces by ward id and space district id
+  async findAllByArea(pagination: PaginationReportSurface) {
+    return await this.reportSurfaceRepository.find({
+      where: {
+        surface: {
+          space: {
+            district: { id: pagination.district },
+            ward: { id: pagination.ward },
+          },
+        },
+      },
+      relations: {
+        formReport: true,
+        surface: true,
+      },
+    });
+  }
 
   //Find report surface by id
   async findReportSurfaceById(id: number) {

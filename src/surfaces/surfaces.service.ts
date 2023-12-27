@@ -14,6 +14,8 @@ export class SurfacesService {
     private surfacesRepository: Repository<Surfaces>,
   ) {}
 
+  
+
   //Find all surfaces
   async findAll() {
     return this.surfacesRepository.find({
@@ -26,7 +28,7 @@ export class SurfacesService {
 
   //Find all by area
   async findAllByArea(pagination: PaginationSurface) {
-    console.log(pagination)
+    console.log(pagination);
     const ward = pagination.ward;
     const district = pagination.district;
 
@@ -37,7 +39,7 @@ export class SurfacesService {
           ward: { id: ward },
         },
       },
-      relations: ['space', 'surfaceType'], 
+      relations: ['space', 'surfaceType'],
     });
   }
 
