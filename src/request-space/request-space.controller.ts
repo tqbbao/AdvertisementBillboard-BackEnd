@@ -21,6 +21,12 @@ import { PaginationRequestSpace } from './dto/pagination';
 @Controller('request-space')
 export class RequestSpaceController {
   constructor(private readonly requestSpaceService: RequestSpaceService) {}
+
+  //Find all request edit space
+  @Get()
+  async findAll() {
+    return await this.requestSpaceService.findAll();
+  }
   //Find all request edit space by area
   @Get('/area')
   async findAllByArea(@Query() pagination: PaginationRequestSpace) {

@@ -20,10 +20,24 @@ export class RequestSpaceService {
     private readonly spacesService: SpacesService,
   ) {}
 
+  //Find all request edit space
+  async findAll() {
+    return await this.requestEditSpaceRepository.find({
+      relations: {
+        formAdvertising: true,
+        locationTypes: true,
+        ward: true,
+        district: true,
+      },
+    });
+  }
+
   //Create a new request edit space
   async createRequestEditSpace(data: CreateRequestSpaceDto) {
     try {
-      await this.reportsSpaceService.updateStateReportSpace(parseInt(String(data.reportSpace)));
+      await this.reportsSpaceService.updateStateReportSpace(
+        parseInt(String(data.reportSpace)),
+      );
       const requestEditSpace = this.requestEditSpaceRepository.create(data);
       return await this.requestEditSpaceRepository.save(requestEditSpace);
     } catch (error) {
@@ -46,19 +60,18 @@ export class RequestSpaceService {
 
   //Find all request edit space by area
   async findAllByArea(pagination: PaginationRequestSpace) {
-    console.log(pagination.state)
+    console.log(pagination.state);
     return await this.requestEditSpaceRepository.find({
       where: {
         reportSpace: {
           space: {
             district: { id: pagination.district },
             ward: { id: pagination.ward },
-          }
+          },
         },
-        state: pagination.state
-      }
-    })
-    
+        state: pagination.state,
+      },
+    });
   }
 
   // Aceept request edit space
@@ -73,7 +86,9 @@ export class RequestSpaceService {
       });
 
       //Cập nhật state của report space thành PROCESSED
-      await this.reportsSpaceService.acceptReportSpace(requestEditSpace.reportSpace.id);
+      await this.reportsSpaceService.acceptReportSpace(
+        requestEditSpace.reportSpace.id,
+      );
 
       return await this.findRequestEditSpaceById(id);
     } catch (error) {

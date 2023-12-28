@@ -62,36 +62,39 @@ export class TempSpaceService {
       if (!tempSpace) {
         throw new Error('Request edit space not found');
       }
+      console.log(tempSpace)
+      const data = {
+        address: tempSpace.address,
+        reason: tempSpace.reason,
+        latitude: tempSpace.latitude,
+        longitude: tempSpace.longitude,
+        imgUrl: tempSpace.imgUrl,
+        zone: tempSpace.zone,
+        formAdvertising: tempSpace.formAdvertising,
+        locationTypes: tempSpace.locationTypes,
+        district: tempSpace.district,
+        ward: tempSpace.ward,
+      };
+      if(tempSpace.state )
 
       //Kiểm tra condition update hay condition create
       if (tempSpace.space) {
         console.log(tempSpace.space)
         //Condition update
         //Cập nhật lại giá trị của space
-        const data = {
-          address: tempSpace.address,
-          reason: tempSpace.reason,
-          latitude: tempSpace.latitude,
-          longitude: tempSpace.longitude,
-          imgUrl: tempSpace.imgUrl,
-          zone: tempSpace.zone,
-          formAdvertising: tempSpace.formAdvertising,
-          locationTypes: tempSpace.locationTypes,
-          district: tempSpace.district,
-          ward: tempSpace.ward,
-        };
-
         const spaceUpdate = await this.spacesService.updateSpace(tempSpace.space.id, data);
-
         await this.updateStateTempSpace(tempSpace.id);
-        console.log(spaceUpdate);
-
       } else {
+        console.log("nul")
         //Condition create
         //Tạo mới space
+        const spaceCreate = await this.spacesService.createSpace(data);
+        await this.updateStateTempSpace(tempSpace.id); 
       }
-
-      return await this.spacesRepository.find();
+      return {
+        message: 'Accept temp space successfully',
+      };
+      
     } catch (error) {}
   }
 }
