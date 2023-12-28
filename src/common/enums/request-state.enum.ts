@@ -1,6 +1,6 @@
 export enum RequestState {
     ACCEPTED = 'Accepted',
-    DECLINED='Aeclined',
+    DECLINED='Declined',
     PENDING='Pending',
   }
   
