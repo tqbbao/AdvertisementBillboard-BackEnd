@@ -72,6 +72,9 @@ export class TempSpace {
   state: RequestState;
 
 
+  @ManyToOne(() => Spaces, space => space.tempSpaces, { eager: true, nullable: true })
+  space: Spaces;
+
 
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })

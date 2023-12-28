@@ -32,6 +32,7 @@ import { AuthModule } from './auth/auth.module';
 import { FormReportsModule } from './form-reports/form-reports.module';
 import { RequestSurfaceModule } from './request-surface/request-surface.module';
 import { TempSpace } from './entity/tempSpace.entity';
+import { TempSpaceModule } from './temp-space/temp-space.module';
 
 @Module({
   imports: [
@@ -99,6 +100,7 @@ import { TempSpace } from './entity/tempSpace.entity';
     AuthModule,
     FormReportsModule,
     RequestSurfaceModule,
+    TempSpaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -16,6 +16,8 @@ export class SpacesService {
     private spacesRepository: Repository<Spaces>,
     private readonly rere: ReverseGeocodingService,
     private mailerService: MailerService,
+
+    
   ) {}
 
   async reverseGeocoding(lat: number, long: number) {
@@ -161,4 +163,9 @@ export class SpacesService {
       throw error;
     }
   }
+
+
+
+
+  
 }

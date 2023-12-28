@@ -6,6 +6,7 @@ import { Wards } from './wards.entity';
 import { ReportSpace } from './reportSpace.entity';
 import { SpaceZone } from 'src/common/enums/space-zone.enum';
 import { Districts } from './districts.entity';
+import { TempSpace } from './tempSpace.entity';
 
 @Entity({ name: 'spaces' })
 export class Spaces {
@@ -79,5 +80,9 @@ export class Spaces {
   // 1 Space có nhiều reportSpace
   @OneToMany(() => ReportSpace, (reportSpace) => reportSpace.space)
   reportSpaces: ReportSpace[];
+
+
+  @OneToMany(() => TempSpace, (reportSpace) => reportSpace.space)
+  tempSpaces: TempSpace[];
 
 }
