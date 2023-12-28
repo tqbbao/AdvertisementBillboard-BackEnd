@@ -107,6 +107,10 @@ export class RequestSpaceService {
       await this.requestEditSpaceRepository.update(id, {
         state: RequestState.DECLINED,
       });
+      //Cập nhật state của report space thành PROCESSED
+      await this.reportsSpaceService.declineReportSpace(
+        requestEditSpace.reportSpace.id,
+      );
     } catch (error) {
       throw error;
     }

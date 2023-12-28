@@ -113,8 +113,6 @@ export class ReportsSpaceService {
     });
   }
 
-
-
   //Soft delete a report space
   async removeReportSpace(id: number) {
     try {
@@ -152,6 +150,21 @@ export class ReportsSpaceService {
     }
   }
 
+  //decline report space
+  async declineReportSpace(id: number) {
+    try {
+      const reportSpace = await this.findReportSpaceById(id);
+      if (!reportSpace) {
+        throw new Error('Report space not found');
+      }
+      await this.reportSpaceRepository.update(id, {
+        state: ReportState.REJECTED,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   //Update state of report space when send request edit space
   async updateStateReportSpace(id: number) {
     try {
@@ -174,10 +187,11 @@ export class ReportsSpaceService {
       }
       reportSpace = { ...reportSpace, state: ReportState.PENDING };
 
-      const requestEditSpace = await this.findRequestEditSpaceByReportSpaceId(reportSpace.id);
+      const requestEditSpace = await this.findRequestEditSpaceByReportSpaceId(
+        reportSpace.id,
+      );
 
       await this.deleteRequestEditSpace(requestEditSpace[0].id);
-
 
       return await this.reportSpaceRepository.save(reportSpace);
     } catch (error) {
