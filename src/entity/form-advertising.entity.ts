@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Spaces } from './spaces.entity';
-import { PendingSpace } from './pendingEditSpace.entity';
 import { RequestEditSpace } from './requestEditSpace.entity';
+import { TempSpace } from './tempSpace.entity';
 
 @Entity({ name: 'form_advertising' })
 export class FormAdvertising {
@@ -37,6 +37,10 @@ export class FormAdvertising {
   @OneToMany(() => RequestEditSpace, space => space.formAdvertising)
   requestEditSpaces: RequestEditSpace[];
 
+
+  @OneToMany(() => TempSpace, space => space.formAdvertising)
+  tempSpaces: TempSpace[];
+  
 
 
 }

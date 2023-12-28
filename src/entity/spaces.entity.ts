@@ -4,9 +4,7 @@ import { LocationTypes } from './location-types.entity';
 import { Surfaces } from './surfaces.entity';
 import { Wards } from './wards.entity';
 import { ReportSpace } from './reportSpace.entity';
-import { PendingSpace } from './pendingEditSpace.entity';
 import { SpaceZone } from 'src/common/enums/space-zone.enum';
-import { PendingSurface } from './pendingEditSurface.entity';
 import { Districts } from './districts.entity';
 
 @Entity({ name: 'spaces' })

@@ -31,6 +31,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FormReportsModule } from './form-reports/form-reports.module';
 import { RequestSurfaceModule } from './request-surface/request-surface.module';
+import { TempSpace } from './entity/tempSpace.entity';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { RequestSurfaceModule } from './request-surface/request-surface.module';
         ReportSurface,
         RequestEditSpace,
         User,
+        TempSpace,
       ],
       synchronize: true,
     }),
