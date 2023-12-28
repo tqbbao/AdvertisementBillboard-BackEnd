@@ -72,6 +72,9 @@ export class RequestSpaceService {
         state: RequestState.ACCEPTED,
       });
 
+      //Cập nhật state của report space thành PROCESSED
+      await this.reportsSpaceService.acceptReportSpace(requestEditSpace.reportSpace.id);
+
       return await this.findRequestEditSpaceById(id);
     } catch (error) {
       throw error;

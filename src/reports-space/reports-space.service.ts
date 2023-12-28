@@ -1,17 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportSpace } from 'src/entity/reportSpace.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateReportSpaceDto } from './dto/create-reportSpace.dto';
 import { UpdateReportSpaceDto } from './dto/update-reportSpace.dto';
 import { ReportState } from 'src/common/enums/report-state.enum';
 import { PaginationReportSpace } from './dto/pagination';
+import { RequestEditSpace } from 'src/entity/requestEditSpace.entity';
 
 @Injectable()
 export class ReportsSpaceService {
   constructor(
     @InjectRepository(ReportSpace)
     private readonly reportSpaceRepository: Repository<ReportSpace>,
+
+    @InjectRepository(RequestEditSpace)
+    private readonly requestEditSpaceRepository: Repository<RequestEditSpace>,
   ) {}
 
   //Find all report spaces
@@ -38,9 +42,7 @@ export class ReportsSpaceService {
   // }
 
   //Find all report spaces by ward id and space district id
-  async findAllByArea(
-    pagination: PaginationReportSpace,
-  ) {
+  async findAllByArea(pagination: PaginationReportSpace) {
     return await this.reportSpaceRepository.find({
       where: {
         space: {
@@ -89,6 +91,29 @@ export class ReportsSpaceService {
       throw error;
     }
   }
+
+  //Delete a request edit space
+  async deleteRequestEditSpace(id: number) {
+    try {
+      const requestEditSpace = await this.requestEditSpaceRepository.findOne({
+        where: { id: id },
+      });
+      if (!requestEditSpace) {
+        throw new Error('Request edit space not found');
+      }
+      return await this.requestEditSpaceRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+  // Find request edit space by report space id
+  async findRequestEditSpaceByReportSpaceId(reportSpaceId: number) {
+    return await this.requestEditSpaceRepository.find({
+      where: { reportSpace: { id: reportSpaceId } },
+    });
+  }
+
+
 
   //Soft delete a report space
   async removeReportSpace(id: number) {
@@ -140,6 +165,23 @@ export class ReportsSpaceService {
       throw error;
     }
   }
+  //Update state of report space when delete request edit space
+  async updateStateReportSpaceDelete(id: number) {
+    try {
+      let reportSpace = await this.findReportSpaceById(id);
+      if (!reportSpace) {
+        throw new Error('Report space not found');
+      }
+      reportSpace = { ...reportSpace, state: ReportState.PENDING };
+
+      const requestEditSpace = await this.findRequestEditSpaceByReportSpaceId(reportSpace.id);
+
+      await this.deleteRequestEditSpace(requestEditSpace[0].id);
 
 
+      return await this.reportSpaceRepository.save(reportSpace);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

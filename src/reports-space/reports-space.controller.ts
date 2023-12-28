@@ -46,6 +46,17 @@ export class ReportsSpaceController {
     return await this.reportsSpaceService.findReportSpaceById(id);
   }
 
+  //
+  @HttpCode(200)
+  @Get('/update-state-report-space-delete/:id')
+  async updateStateReportSpaceDelete(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return await this.reportsSpaceService.updateStateReportSpaceDelete(
+      id,
+    );
+  }
+
   //Find all report spaces by space district id
   // @Get('/district/:id')
   // async findAllReportSpacesBySpaceDistrictId(
