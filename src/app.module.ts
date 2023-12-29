@@ -33,6 +33,7 @@ import { FormReportsModule } from './form-reports/form-reports.module';
 import { RequestSurfaceModule } from './request-surface/request-surface.module';
 import { TempSpace } from './entity/tempSpace.entity';
 import { TempSpaceModule } from './temp-space/temp-space.module';
+import { FormAdvertisingModule } from './form-advertising/form-advertising.module';
 
 @Module({
   imports: [
@@ -101,6 +102,7 @@ import { TempSpaceModule } from './temp-space/temp-space.module';
     FormReportsModule,
     RequestSurfaceModule,
     TempSpaceModule,
+    FormAdvertisingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

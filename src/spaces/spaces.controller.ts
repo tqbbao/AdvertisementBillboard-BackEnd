@@ -58,6 +58,20 @@ export class SpacesController {
     }
   }
 
+  //Find by id
+  @Get(':id')
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const space = await this.spacesService.findById(id);
+      if (!space) {
+        throw new CustomException('Not found', HttpStatus.NOT_FOUND);
+      }
+      return space;
+    } catch (error) {
+      throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @HttpCode(200)
   @Get(':lat,:long')
   async findByLatLong(@Param('lat') lat: number, @Param('long') long: number) {
@@ -103,11 +117,11 @@ export class SpacesController {
         imgUrl: fullFilePath,
       });
       return {
-        message: 'Create space successfully',}
+        message: 'Create space successfully',
+      };
     } catch (error) {
       throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
     }
-    
   }
 
   @HttpCode(200)
@@ -132,16 +146,15 @@ export class SpacesController {
         ...data,
         imgUrl: fullFilePath,
       });
-      if(!space){
+      if (!space) {
         throw new CustomException('Not found', HttpStatus.NOT_FOUND);
       }
       return {
         message: 'Update space successfully',
-      }
+      };
     } catch (error) {
       throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
     }
-    
   }
 
   @HttpCode(200)
