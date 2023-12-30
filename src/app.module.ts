@@ -34,6 +34,7 @@ import { RequestSurfaceModule } from './request-surface/request-surface.module';
 import { TempSpace } from './entity/tempSpace.entity';
 import { TempSpaceModule } from './temp-space/temp-space.module';
 import { FormAdvertisingModule } from './form-advertising/form-advertising.module';
+import { LocationTypesModule } from './location-types/location-types.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { FormAdvertisingModule } from './form-advertising/form-advertising.modul
     ReportsSurfaceModule,
     WardsModule,
     ReverseGeocodingModule,
+    LocationTypesModule,
     DistrictsModule,
     RequestSpaceModule,
     MailerModule.forRootAsync({
