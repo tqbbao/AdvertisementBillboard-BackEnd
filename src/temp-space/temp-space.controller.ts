@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseInterceptors,
@@ -15,11 +16,29 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { UpdateTempSpaceDto } from './dto/update-temp-space.dto';
 import { CreateTempSpaceDto } from './dto/create-temp-space.dto';
+import { Pagination } from './dto/pagination';
 
 @Controller('temp-space')
 export class TempSpaceController {
   constructor(private tempSpaceService: TempSpaceService) {}
 
+  //Find all temp space with state pending
+  @Get()
+  async findAllTempSpacePending(@Query() pagination: Pagination) {
+    return await this.tempSpaceService.findAllTempSpacePending(pagination);
+  }
+
+  //Declined temp space
+  @Get('/declined/:id')
+  async declinedTempSpace(@Param('id', ParseIntPipe) id: number) {
+    return await this.tempSpaceService.rejectTempSpace(id);
+  }
+
+  //Accept temp space
+  @Get('/accept/:id')
+  async acceptTempSpace(@Param('id', ParseIntPipe) id: number) {
+    return await this.tempSpaceService.acceptTempSpaceAll(id);
+  }
   //Create temp space condition update space
   @Post('/condition-update')
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
@@ -61,11 +80,4 @@ export class TempSpaceController {
       imgUrl: fullFilePath,
     });
   }
-
-  //Accept temp space 
-  @Get('/accept/:id')
-    async acceptTempSpace(@Param('id', ParseIntPipe) id: number) {
-        return await this.tempSpaceService.acceptTempSpaceAll(id);
-    }
-
 }

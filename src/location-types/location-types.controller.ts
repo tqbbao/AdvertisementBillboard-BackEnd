@@ -47,4 +47,9 @@ export class LocationTypesController {
   async update(@Param('id') id: number, @Body() data: CreateLocationTypesDto) {
     return await this.locationTypesService.update(id, data);
   }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number) {
+    return await this.locationTypesService.remove(id);
+  }
 }

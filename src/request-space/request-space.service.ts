@@ -35,10 +35,10 @@ export class RequestSpaceService {
   //Create a new request edit space
   async createRequestEditSpace(data: CreateRequestSpaceDto) {
     try {
+      const requestEditSpace = this.requestEditSpaceRepository.create(data);
       await this.reportsSpaceService.updateStateReportSpace(
         parseInt(String(data.reportSpace)),
       );
-      const requestEditSpace = this.requestEditSpaceRepository.create(data);
       return await this.requestEditSpaceRepository.save(requestEditSpace);
     } catch (error) {
       throw error;
@@ -107,7 +107,7 @@ export class RequestSpaceService {
       await this.requestEditSpaceRepository.update(id, {
         state: RequestState.DECLINED,
       });
-      //Cập nhật state của report space thành PROCESSED
+      //Cập nhật state của report space thành REJECTED
       await this.reportsSpaceService.declineReportSpace(
         requestEditSpace.reportSpace.id,
       );

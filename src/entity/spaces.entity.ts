@@ -7,6 +7,7 @@ import { ReportSpace } from './reportSpace.entity';
 import { SpaceZone } from 'src/common/enums/space-zone.enum';
 import { Districts } from './districts.entity';
 import { TempSpace } from './tempSpace.entity';
+import { RequestEditSurface } from './requestEditSurface.entity';
 
 @Entity({ name: 'spaces' })
 export class Spaces {
@@ -74,6 +75,9 @@ export class Spaces {
   // Có nhiều bảng quảng cáo
   @OneToMany(() => Surfaces, (surface) => surface.space)
   surface: Surfaces[];
+
+  // @OneToMany(() => RequestEditSurface, (requestEditSurface) => requestEditSurface.space)
+  // requestEditSurfaces: RequestEditSurface[];
 
 
 

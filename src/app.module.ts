@@ -35,6 +35,7 @@ import { TempSpace } from './entity/tempSpace.entity';
 import { TempSpaceModule } from './temp-space/temp-space.module';
 import { FormAdvertisingModule } from './form-advertising/form-advertising.module';
 import { LocationTypesModule } from './location-types/location-types.module';
+import { RequestEditSurface } from './entity/requestEditSurface.entity';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { LocationTypesModule } from './location-types/location-types.module';
         ReportSpace,
         ReportSurface,
         RequestEditSpace,
+        RequestEditSurface,
         User,
         TempSpace,
       ],

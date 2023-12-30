@@ -98,18 +98,47 @@ export class ReportsSurfaceService {
       throw error;
     }
   }
+  //accept report surface
+  async acceptReportSurface(id: number) {
+    try {
+      const reportSpace = await this.findReportSurfaceById(id);
+      if (!reportSpace) {
+        throw new Error('Report surface not found');
+      }
+      await this.reportSurfaceRepository.update(id, {
+        state: ReportState.PROCESSED,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 
-  // //Update state of report surface when send request edit space
-  // async updateStateReportSurface(id: number) {
-  //   try {
-  //     let reportSurface = await this.findReportSurfaceById(id);
-  //     if (!reportSurface) {
-  //       throw new Error('Report surface not found');
-  //     }
-  //     reportSurface = { ...reportSurface, state: ReportState.PROCESSING };
-  //     return await this.reportSurfaceRepository.save(reportSurface);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  //decline report surface
+  async declineReportSurface(id: number) {
+    try {
+      const reportSpace = await this.findReportSurfaceById(id);
+      if (!reportSpace) {
+        throw new Error('Report surface not found');
+      }
+      await this.reportSurfaceRepository.update(id, {
+        state: ReportState.REJECTED,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //Update state of report surface when send request edit space
+  async updateStateReportSurface(id: number) {
+    try {
+      let reportSurface = await this.findReportSurfaceById(id);
+      if (!reportSurface) {
+        throw new Error('Report surface not found');
+      }
+      reportSurface = { ...reportSurface, state: ReportState.PROCESSING };
+      return await this.reportSurfaceRepository.save(reportSurface);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

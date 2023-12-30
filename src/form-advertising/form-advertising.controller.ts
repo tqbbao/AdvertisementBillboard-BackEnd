@@ -41,4 +41,11 @@ export class FormAdvertisingController {
   async update(@Param('id') id: number, @Body() data: CreateFormAdvertisingDto) {
     return await this.formAdvertisingService.update(id, data);
   }
+
+  @Delete(':id')
+  async remove(@Param('id') id: number) {
+    return await this.formAdvertisingService.remove(id);
+  }
+
+
 }
