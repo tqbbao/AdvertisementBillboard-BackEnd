@@ -73,7 +73,10 @@ export class TempSpaceService {
         throw new Error('Request edit space not found');
       }
       const data = { ...tempSpace, state: RequestState.DECLINED };
-      return await this.spacesRepository.save(data);
+      await this.spacesRepository.save(data);
+      return {
+        message: 'Reject temp space successfully',
+      }
     } catch (error) {}
   }
 
