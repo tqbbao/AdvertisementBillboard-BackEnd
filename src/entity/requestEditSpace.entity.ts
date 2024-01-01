@@ -36,11 +36,11 @@ export class RequestEditSpace {
   address: string;
 
   // Latitude
-  @Column('decimal', { name: 'latitude'})
+  @Column('decimal', { name: 'latitude', precision: 10, scale: 6})
   latitude: number;
 
   // Longitude
-  @Column('decimal', { name: 'longitude'})
+  @Column('decimal', { name: 'longitude', precision: 10, scale: 6})
   longitude: number;
 
   

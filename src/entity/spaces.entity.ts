@@ -8,6 +8,7 @@ import { SpaceZone } from 'src/common/enums/space-zone.enum';
 import { Districts } from './districts.entity';
 import { TempSpace } from './tempSpace.entity';
 import { RequestEditSurface } from './requestEditSurface.entity';
+import { TempSurface } from './tempSurface.entity';
 
 @Entity({ name: 'spaces' })
 export class Spaces {
@@ -23,11 +24,11 @@ export class Spaces {
   address: string;
 
   // Latitude
-  @Column('decimal', { name: 'latitude'})
+  @Column('decimal', { name: 'latitude', precision: 10, scale: 6})
   latitude: number;
 
   // Longitude
-  @Column('decimal', { name: 'longitude'})
+  @Column('decimal', { name: 'longitude', precision: 10, scale: 6})
   longitude: number;
 
   // Hình ảnh đặt bảng quảng cáo
@@ -76,6 +77,9 @@ export class Spaces {
   @OneToMany(() => Surfaces, (surface) => surface.space)
   surface: Surfaces[];
 
+  @OneToMany(() => TempSurface, (tempSurface) => tempSurface.space)
+  tempSurfaces: TempSurface[];
+
   // @OneToMany(() => RequestEditSurface, (requestEditSurface) => requestEditSurface.space)
   // requestEditSurfaces: RequestEditSurface[];
 
@@ -86,7 +90,9 @@ export class Spaces {
   reportSpaces: ReportSpace[];
 
 
-  @OneToMany(() => TempSpace, (reportSpace) => reportSpace.space)
+  @OneToMany(() => TempSpace, (tempSpace) => tempSpace.space)
   tempSpaces: TempSpace[];
+
+
 
 }

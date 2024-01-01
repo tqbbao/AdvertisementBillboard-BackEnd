@@ -36,6 +36,8 @@ import { TempSpaceModule } from './temp-space/temp-space.module';
 import { FormAdvertisingModule } from './form-advertising/form-advertising.module';
 import { LocationTypesModule } from './location-types/location-types.module';
 import { RequestEditSurface } from './entity/requestEditSurface.entity';
+import { TempSurfaceModule } from './temp-surface/temp-surface.module';
+import { TempSurface } from './entity/tempSurface.entity';
 
 @Module({
   imports: [
@@ -65,6 +67,7 @@ import { RequestEditSurface } from './entity/requestEditSurface.entity';
         RequestEditSurface,
         User,
         TempSpace,
+        TempSurface,
       ],
       synchronize: true,
     }),
@@ -107,6 +110,7 @@ import { RequestEditSurface } from './entity/requestEditSurface.entity';
     RequestSurfaceModule,
     TempSpaceModule,
     FormAdvertisingModule,
+    TempSurfaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

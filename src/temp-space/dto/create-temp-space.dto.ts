@@ -5,7 +5,9 @@ import { LocationTypes } from "src/entity/location-types.entity";
 import { Wards } from "src/entity/wards.entity";
 
 export class CreateTempSpaceDto {
+  //Lý do create
   reason: string;
+  //các giá trị dùng để create cho Space 
   address: string;
   latitude: number;
   longitude: number;

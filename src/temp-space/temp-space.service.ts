@@ -12,7 +12,7 @@ import { Pagination } from './dto/pagination';
 export class TempSpaceService {
   constructor(
     @InjectRepository(TempSpace)
-    private spacesRepository: Repository<TempSpace>,
+    private tempSpacesRepository: Repository<TempSpace>,
 
     private readonly spacesService: SpacesService,
   ) {}
@@ -22,8 +22,8 @@ export class TempSpaceService {
   async createTempSpaceConditionUpdate(data: UpdateTempSpaceDto) {
     try {
       //console.log(data);
-      const dataTempSpace = this.spacesRepository.create(data);
-      return await this.spacesRepository.save(dataTempSpace);
+      const dataTempSpace = this.tempSpacesRepository.create(data);
+      return await this.tempSpacesRepository.save(dataTempSpace);
     } catch (error) {}
   }
 
@@ -32,23 +32,23 @@ export class TempSpaceService {
   async createTempSpaceConditionCreate(data: CreateTempSpaceDto) {
     try {
       //console.log(data);
-      const dataTempSpace = this.spacesRepository.create(data);
-      return await this.spacesRepository.save(dataTempSpace);
+      const dataTempSpace = this.tempSpacesRepository.create(data);
+      return await this.tempSpacesRepository.save(dataTempSpace);
     } catch (error) {}
   }
 
   //Find temp space by id
   async findTempSpaceById(id: number) {
     try {
-      return await this.spacesRepository.findOne({ where: { id: id } });
+      return await this.tempSpacesRepository.findOne({ where: { id: id } });
     } catch (error) {}
   }
 
   //Find all temp space with state pending
   async findAllTempSpacePending(pagination: Pagination) {
     try {
-      return await this.spacesRepository.find({
-        where: { state:  pagination.state },
+      return await this.tempSpacesRepository.find({
+        where: { state: pagination.state },
       });
     } catch (error) {}
   }
@@ -61,7 +61,7 @@ export class TempSpaceService {
         throw new Error('Request edit space not found');
       }
       const data = { ...tempSpace, state: RequestState.ACCEPTED };
-      return await this.spacesRepository.save(data);
+      return await this.tempSpacesRepository.save(data);
     } catch (error) {}
   }
 
@@ -73,10 +73,10 @@ export class TempSpaceService {
         throw new Error('Request edit space not found');
       }
       const data = { ...tempSpace, state: RequestState.DECLINED };
-      await this.spacesRepository.save(data);
+      await this.tempSpacesRepository.save(data);
       return {
         message: 'Reject temp space successfully',
-      }
+      };
     } catch (error) {}
   }
 
@@ -114,24 +114,23 @@ export class TempSpaceService {
         district: tempSpace.district,
         ward: tempSpace.ward,
       };
-      if (tempSpace.state)
-        if (tempSpace.space) {
-          //Kiểm tra condition update hay condition create
-          console.log(tempSpace.space);
-          //Condition update
-          //Cập nhật lại giá trị của space
-          const spaceUpdate = await this.spacesService.updateSpace(
-            tempSpace.space.id,
-            data,
-          );
-          await this.updateStateTempSpace(tempSpace.id);
-        } else {
-          console.log('nul');
-          //Condition create
-          //Tạo mới space
-          const spaceCreate = await this.spacesService.createSpace(data);
-          await this.updateStateTempSpace(tempSpace.id);
-        }
+      if (tempSpace.space) {
+        //Kiểm tra condition update hay condition create
+        console.log(tempSpace.space);
+        //Condition update
+        //Cập nhật lại giá trị của space
+        const spaceUpdate = await this.spacesService.updateSpace(
+          tempSpace.space.id,
+          data,
+        );
+        await this.updateStateTempSpace(tempSpace.id);
+      } else {
+        console.log('nul');
+        //Condition create
+        //Tạo mới space
+        const spaceCreate = await this.spacesService.createSpace(data);
+        await this.updateStateTempSpace(tempSpace.id);
+      }
       return {
         message: 'Accept temp space successfully',
       };

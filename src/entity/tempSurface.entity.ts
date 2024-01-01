@@ -1,21 +1,20 @@
+import { RequestState } from 'src/common/enums/request-state.enum';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { SurfaceTypes } from './surface-types.entity';
 import { Spaces } from './spaces.entity';
-import { ReportSurface } from './reportSurface.entity';
-import { PendingSurface } from './pendingEditSurface.entity';
-import { TempSurface } from './tempSurface.entity';
+import { Surfaces } from './surfaces.entity';
 
-@Entity({ name: 'surfaces' })
-export class Surfaces {
+
+@Entity({ name: 'temp_surface' })
+export class TempSurface {
   @PrimaryGeneratedColumn({
     type: 'smallint',
     name: 'id',
@@ -23,6 +22,12 @@ export class Surfaces {
   })
   id: number;
 
+  //Lý do chỉnh sửa
+  @Column('longtext', { name: 'reason' })
+  reason: string;
+  
+  @Column({ type: 'enum', enum: RequestState, default: RequestState.PENDING })
+  state: RequestState;
   // Chiều cao bảng quảng cáo
   @Column('decimal', { name: 'height', precision: 10, scale: 2 })
   height: number;
@@ -39,6 +44,16 @@ export class Surfaces {
   @Column('timestamp', { name: 'expiry_date', nullable: true })
   expiryDate: Date;
 
+  @ManyToOne(() => SurfaceTypes, (surfaceType) => surfaceType.tempSurfaces, {eager: true})
+  surfaceType: SurfaceTypes;
+
+  @ManyToOne(() => Surfaces, (surface) => surface.tempSurfaces, {eager: true, nullable: true})
+  surface: Surfaces;
+
+
+  @ManyToOne(() => Spaces, (space) => space.tempSurfaces, {eager: true})
+  space: Spaces;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;
 
@@ -47,25 +62,4 @@ export class Surfaces {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Date;
-
-  // Loại bảng quảng cáo - FK
-  @ManyToOne(() => SurfaceTypes, (surfaceType) => surfaceType.surfaces, {eager: true})
-  surfaceType: SurfaceTypes;
-
-  // Thuộc về điểm đặt nào? - FK
-  @ManyToOne(() => Spaces, (space) => space.surface, {eager: true})
-  space: Spaces;
-
-
-  //? KHÔNG NẰM TRONG DATABASE
-  @OneToMany(
-    () => ReportSurface,
-    (reportSurface) => reportSurface.surface,
-  )
-  reportSurfaces: ReportSurface[];
-
-
-  @OneToMany(() => TempSurface, (tempSurface) => tempSurface.surface)
-  tempSurfaces: TempSurface[];
-
 }
