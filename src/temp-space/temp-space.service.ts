@@ -37,6 +37,17 @@ export class TempSpaceService {
     } catch (error) {}
   }
 
+  //Delete temp space by id
+  async deleteTempSpaceById(id: number) {
+    try {
+      const tempSpace = await this.findTempSpaceById(id);
+      if (!tempSpace) {
+        throw new Error('Request edit space not found');
+      }
+      return await this.tempSpacesRepository.delete({ id: id });
+    } catch (error) {}
+  }
+
   //Find temp space by id
   async findTempSpaceById(id: number) {
     try {

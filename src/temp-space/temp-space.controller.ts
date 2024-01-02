@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -30,16 +31,14 @@ export class TempSpaceController {
 
   //Find temp space by id
   @Get(':id')
-  async findById(@Param('id', ParseIntPipe) id: number){
+  async findById(@Param('id', ParseIntPipe) id: number) {
     try {
       const temp_space = await this.tempSpaceService.findTempSpaceById(id);
-      if(!temp_space){
+      if (!temp_space) {
         return [];
       }
       return temp_space;
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
 
   //Declined temp space
@@ -93,5 +92,10 @@ export class TempSpaceController {
       ...data,
       imgUrl: fullFilePath,
     });
+  }
+
+  @Delete(':id')
+  async deleteTempSpaceById(@Param('id', ParseIntPipe) id: number) {
+    return await this.tempSpaceService.deleteTempSpaceById(id);
   }
 }

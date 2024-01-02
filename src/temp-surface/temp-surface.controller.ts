@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -32,7 +33,8 @@ export class TempSurfaceController {
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     try {
-      const temp_surface = await this.tempSurfaceService.findTempSurfaceById(id);
+      const temp_surface =
+        await this.tempSurfaceService.findTempSurfaceById(id);
       if (!temp_surface) {
         return [];
       }
@@ -92,5 +94,10 @@ export class TempSurfaceController {
       ...data,
       imgUrl: fullFilePath,
     });
+  }
+  //Delete temp surface by id
+  @Delete(':id')
+  async deleteTempSurfaceById(@Param('id', ParseIntPipe) id: number) {
+    return await this.tempSurfaceService.deleteTempSurfaceById(id);
   }
 }

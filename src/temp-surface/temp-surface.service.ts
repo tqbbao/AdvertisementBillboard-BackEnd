@@ -35,6 +35,17 @@ export class TempSurfaceService {
     } catch (error) {}
   }
 
+  //Delete temp surface by id
+  async deleteTempSurfaceById(id: number) {
+    try {
+      const tempSurface = await this.findTempSurfaceById(id);
+      if (!tempSurface) {
+        throw new Error('Request edit space not found');
+      }
+      return await this.tempSurfaceRepository.delete({ id: id });
+    } catch (error) {}
+  }
+
   //Find temp surface by id
   async findTempSurfaceById(id: number) {
     try {
@@ -119,7 +130,7 @@ export class TempSurfaceService {
         );
         await this.updateStateTempSurface(tempSurface.id);
       } else {
-        console.log('null')
+        console.log('null');
         //Condition create
         //Tạo mới surface
         const surfaceCreate = await this.surfaceService.createSurface(data);
