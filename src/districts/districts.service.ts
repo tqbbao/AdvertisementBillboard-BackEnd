@@ -13,11 +13,12 @@ export class DistrictsService {
 
   //Find by IdGeo
   async findByIdGeo(idGeo: string) {
-    return await this.districtRepository.find({
+    const district = await this.districtRepository.find({
       where: {
         idGeo: idGeo,
       },
     });
+    return district;
   }
 
   //Find by name

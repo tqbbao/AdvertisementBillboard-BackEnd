@@ -11,14 +11,14 @@ export class WardsService {
   ) {}
   //Find by IdGeo
   async findByIdGeo(idGeo: string) {
-    return await this.wardRepository.find({
+    const ward = await this.wardRepository.find({
       where: {
         idGeo: idGeo,
       },
     });
+    
+    return ward;
   }
-
-
 
   //Find by id
   async findById(id: number) {
