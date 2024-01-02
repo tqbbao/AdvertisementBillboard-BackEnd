@@ -17,6 +17,19 @@ export class TempSurfaceService {
     private readonly surfaceService: SurfacesService,
   ) {}
 
+  //Find all temp surface by space id
+  async findAllTempSurfaceBySpaceId(spaceId: number) {
+    try {
+      return await this.tempSurfaceRepository.find({
+        where: {
+          space: {
+            id: spaceId,
+          },
+        }
+      });
+    } catch (error) {}
+  }
+
   //Create temp surface condition update
   //Condition update: thì sẽ cập nhật giá trị surface: surface
   async createTempSurfaceConditionUpdate(data: UpdateTempSurfaceDto) {

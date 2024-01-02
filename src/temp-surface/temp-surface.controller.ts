@@ -42,6 +42,12 @@ export class TempSurfaceController {
     } catch (error) {}
   }
 
+  //Find all temp surface by space id
+  @Get('/space/:id')
+  async findAllTempSurfaceBySpaceId(@Param('id', ParseIntPipe) id: number) {
+    return await this.tempSurfaceService.findAllTempSurfaceBySpaceId(id);
+  }
+
   //Declined temp surface
   @Get('/declined/:id')
   async declinedTempSurface(@Param('id', ParseIntPipe) id: number) {
