@@ -28,6 +28,20 @@ export class TempSpaceController {
     return await this.tempSpaceService.findAllTempSpacePending(pagination);
   }
 
+  //Find temp space by id
+  @Get(':id')
+  async findById(@Param('id', ParseIntPipe) id: number){
+    try {
+      const temp_space = await this.tempSpaceService.findTempSpaceById(id);
+      if(!temp_space){
+        return [];
+      }
+      return temp_space;
+    } catch (error) {
+      
+    }
+  }
+
   //Declined temp space
   @Get('/declined/:id')
   async declinedTempSpace(@Param('id', ParseIntPipe) id: number) {

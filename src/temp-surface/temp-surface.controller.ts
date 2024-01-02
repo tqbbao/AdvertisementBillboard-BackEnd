@@ -28,6 +28,18 @@ export class TempSurfaceController {
     return await this.tempSurfaceService.findAllTempSurfacePending(pagination);
   }
 
+  //Find temp surface by id
+  @Get(':id')
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const temp_surface = await this.tempSurfaceService.findTempSurfaceById(id);
+      if (!temp_surface) {
+        return [];
+      }
+      return temp_surface;
+    } catch (error) {}
+  }
+
   //Declined temp surface
   @Get('/declined/:id')
   async declinedTempSurface(@Param('id', ParseIntPipe) id: number) {
