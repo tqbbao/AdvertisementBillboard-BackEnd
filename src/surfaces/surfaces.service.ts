@@ -26,6 +26,46 @@ export class SurfacesService {
     });
   }
 
+  //Find all surfaces with pagination
+  async findAllWithPagination(pagination: PaginationSurface) {
+    // Giới hạn 1 page bao nhiêu item
+    const limit = Number(pagination.limit) || 10;
+    // Số page hiện tại
+    const page = Number(pagination.page) || 1;
+    // Tính skip bao nhiêu item
+    const skip = (page - 1) * limit;
+
+    //
+
+    const [data, total] = await this.surfacesRepository.findAndCount({
+      relations: {
+        space: true,
+        surfaceType: true,
+      },
+      take: limit,
+      skip: skip,
+    });
+
+    // Tính số page cuối cùng
+    const lastPage = Math.ceil(total / limit);
+    // Tính next page
+    const nextPage = page + 1 > lastPage ? null : page + 1;
+    // Tính prev page
+    const prevPage = page - 1 < 1 ? null : page - 1;
+
+    return {
+      data,
+      pagination: {
+        total,
+        page,
+        limit,
+        lastPage,
+        nextPage,
+        prevPage,
+      },
+    };
+  }
+
   //Find all by area
   async findAllByArea(pagination: PaginationSurface) {
     console.log(pagination);

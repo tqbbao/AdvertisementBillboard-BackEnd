@@ -33,6 +33,21 @@ export class SurfacesController {
     return await this.surfacesService.findAll();
   }
 
+  //Find all surfaces with pagination
+  @Get('/pagination')
+  async findAllWithPagination(@Query() pagination: PaginationSurface) {
+    try {
+      const surfaces = await this.surfacesService.findAllWithPagination(pagination);
+      if (surfaces.data.length === 0) {
+        throw new BadRequestException('Not found');
+      }
+      return surfaces;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+    return await this.surfacesService.findAllWithPagination(pagination);
+  }
+
   @HttpCode(200)
   //Find all by area
   @Get('/area')
