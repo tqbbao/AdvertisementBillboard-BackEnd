@@ -12,6 +12,7 @@ import { SurfaceTypes } from './surface-types.entity';
 import { Spaces } from './spaces.entity';
 import { ReportSurface } from './reportSurface.entity';
 import { PendingSurface } from './pendingEditSurface.entity';
+import { TempSurface } from './tempSurface.entity';
 
 @Entity({ name: 'surfaces' })
 export class Surfaces {
@@ -63,5 +64,8 @@ export class Surfaces {
   )
   reportSurfaces: ReportSurface[];
 
+
+  @OneToMany(() => TempSurface, (tempSurface) => tempSurface.surface)
+  tempSurfaces: TempSurface[];
 
 }

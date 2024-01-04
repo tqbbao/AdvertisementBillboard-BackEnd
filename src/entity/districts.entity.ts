@@ -3,6 +3,7 @@ import { Wards } from './wards.entity';
 import { Spaces } from './spaces.entity';
 import { RequestEditSpace } from './requestEditSpace.entity';
 import { User } from './user.entity';
+import { TempSpace } from './tempSpace.entity';
 
 @Entity({ name: 'districts' })
 export class Districts {
@@ -46,6 +47,9 @@ export class Districts {
 
   @OneToMany(() => RequestEditSpace, space => space.district)
   requestEditSpaces: RequestEditSpace[];
+
+  @OneToMany(() => TempSpace, space => space.district)
+  tempSpaces: TempSpace[];
 
   @OneToMany(() => User, user => user.district)
   users: User[];

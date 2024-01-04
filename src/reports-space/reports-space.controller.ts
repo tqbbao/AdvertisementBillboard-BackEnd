@@ -48,7 +48,7 @@ export class ReportsSpaceController {
 
   //
   @HttpCode(200)
-  @Get('/update-state-report-space-delete/:id')
+  @Delete('/update-state-report-space-delete/:id')
   async updateStateReportSpaceDelete(
     @Param('id', ParseIntPipe) id: number,
   ) {

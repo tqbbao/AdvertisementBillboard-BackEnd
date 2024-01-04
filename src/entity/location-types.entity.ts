@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Spaces } from './spaces.entity';
-import { PendingSpace } from './pendingEditSpace.entity';
 import { RequestEditSpace } from './requestEditSpace.entity';
+import { TempSpace } from './tempSpace.entity';
 
 @Entity({ name: 'location_types' })
 export class LocationTypes {
@@ -34,6 +34,9 @@ export class LocationTypes {
   spaces: Spaces[];
   @OneToMany(() => RequestEditSpace, space => space.locationTypes)
   requestEditSpaces: RequestEditSpace[];
+
+  @OneToMany(() => TempSpace, space => space.locationTypes)
+  tempSpaces: TempSpace[];
 
 
 }

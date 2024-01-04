@@ -31,6 +31,13 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { FormReportsModule } from './form-reports/form-reports.module';
 import { RequestSurfaceModule } from './request-surface/request-surface.module';
+import { TempSpace } from './entity/tempSpace.entity';
+import { TempSpaceModule } from './temp-space/temp-space.module';
+import { FormAdvertisingModule } from './form-advertising/form-advertising.module';
+import { LocationTypesModule } from './location-types/location-types.module';
+import { RequestEditSurface } from './entity/requestEditSurface.entity';
+import { TempSurfaceModule } from './temp-surface/temp-surface.module';
+import { TempSurface } from './entity/tempSurface.entity';
 
 @Module({
   imports: [
@@ -57,7 +64,10 @@ import { RequestSurfaceModule } from './request-surface/request-surface.module';
         ReportSpace,
         ReportSurface,
         RequestEditSpace,
+        RequestEditSurface,
         User,
+        TempSpace,
+        TempSurface,
       ],
       synchronize: true,
     }),
@@ -67,6 +77,7 @@ import { RequestSurfaceModule } from './request-surface/request-surface.module';
     ReportsSurfaceModule,
     WardsModule,
     ReverseGeocodingModule,
+    LocationTypesModule,
     DistrictsModule,
     RequestSpaceModule,
     MailerModule.forRootAsync({
@@ -97,6 +108,9 @@ import { RequestSurfaceModule } from './request-surface/request-surface.module';
     AuthModule,
     FormReportsModule,
     RequestSurfaceModule,
+    TempSpaceModule,
+    FormAdvertisingModule,
+    TempSurfaceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

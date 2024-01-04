@@ -8,6 +8,7 @@ import { Spaces } from 'src/entity/spaces.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Surfaces, Spaces])],
   controllers: [SurfacesController],
-  providers: [SurfacesService]
+  providers: [SurfacesService],
+  exports: [SurfacesService],
 })
 export class SurfacesModule {}

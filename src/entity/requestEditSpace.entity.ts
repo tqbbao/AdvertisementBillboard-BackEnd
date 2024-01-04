@@ -11,7 +11,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ReportSpace } from './reportSpace.entity';
-import { PendingSpace } from './pendingEditSpace.entity';
 import { SpaceZone } from 'src/common/enums/space-zone.enum';
 import { FormAdvertising } from './form-advertising.entity';
 import { LocationTypes } from './location-types.entity';
@@ -37,11 +36,11 @@ export class RequestEditSpace {
   address: string;
 
   // Latitude
-  @Column('decimal', { name: 'latitude'})
+  @Column('decimal', { name: 'latitude', precision: 10, scale: 6})
   latitude: number;
 
   // Longitude
-  @Column('decimal', { name: 'longitude'})
+  @Column('decimal', { name: 'longitude', precision: 10, scale: 6})
   longitude: number;
 
   

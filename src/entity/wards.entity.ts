@@ -12,9 +12,9 @@ import {
 } from 'typeorm';
 import { Districts } from './districts.entity';
 import { Spaces } from './spaces.entity';
-import { PendingSpace } from './pendingEditSpace.entity';
 import { RequestEditSpace } from './requestEditSpace.entity';
 import { User } from './user.entity';
+import { TempSpace } from './tempSpace.entity';
 
 @Entity({ name: 'wards' })
 export class Wards {
@@ -69,6 +69,9 @@ export class Wards {
 
   @OneToMany(() => RequestEditSpace, space => space.ward)
   requestEditSpaces: RequestEditSpace[];
+
+  @OneToMany(() => TempSpace, space => space.ward)
+  tempSpaces: TempSpace[];
 
 
   @OneToMany(() => User, user => user.ward)
