@@ -40,14 +40,12 @@ export class RequestSpaceService {
       await this.reportsSpaceService.updateStateReportSpace(
         parseInt(String(data.reportSpace)),
       );
+      const requestSpace = await this.requestEditSpaceRepository.save(requestEditSpace);
 
       //send mail to user (processing)
       const reportSpace = await this.reportsSpaceService.findReportSpaceById(
         parseInt(String(data.reportSpace)),
       );
-
-      const requestSpace = await this.requestEditSpaceRepository.save(requestEditSpace);
-
       const emailData = {
         email: reportSpace.email,
         name: reportSpace.name,
