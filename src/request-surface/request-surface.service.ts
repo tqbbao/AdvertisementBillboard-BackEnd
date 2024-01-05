@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm/dist/common';
 import { RequestEditSurface } from 'src/entity/requestEditSurface.entity';
 import { Repository } from 'typeorm';
@@ -9,6 +9,7 @@ import { SurfacesService } from 'src/surfaces/surfaces.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as path from 'path';
 import * as fs from 'fs';
+import { CustomException } from 'src/common/exceptions/customException';
 @Injectable()
 export class RequestSurfaceService {
   constructor(
@@ -61,11 +62,21 @@ export class RequestSurfaceService {
         htmlContent = htmlContent.replace(regex, emailData[key]);
       }
 
-      await this.mailerService.sendMail({
-        to: `${emailData.email}`, // Địa chỉ email người nhận
-        subject: 'Report the results you provided', // Tiêu đề của email
-        html: htmlContent,
-      });
+      try {
+        await this.mailerService.sendMail({
+          to: `${emailData.email}`, // Địa chỉ email người nhận
+          subject: 'Report the results you provided', // Tiêu đề của email
+          html: htmlContent,
+        });
+      } catch (error) {
+        console.log(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ==> Không gửi mail được',
+        );
+        throw new CustomException(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ===> Không gửi mail được',
+          400,
+        );
+      }
 
       return requestSurface;
     } catch (error) {
@@ -172,19 +183,29 @@ export class RequestSurfaceService {
         htmlContent = htmlContent.replace(regex, emailData[key]);
       }
 
-      await this.mailerService.sendMail({
-        to: `${emailData.email}`, // Địa chỉ email người nhận
-        subject: 'Report the results you provided', // Tiêu đề của email
-        // html: `<p>Dear ${emailData.name},</p>
-        // <p>You have selected <a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a> as your new Apple ID email address. To verify this email address belongs to you, enter the code below on the Apple ID website, verification page:</p>
-        // <p><strong>${emailData.state}</strong></p>
-        // <p>This code will expire three hours after this email was sent.</p>
-        // <p><em>Why you received this email.</em><br/>
-        // Apple requires verification whenever an email address is selected as an Apple ID.</p>
-        // <p>If you did not make this request, you can ignore this email or report it to Apple Support.</p>
-        // `, // Nội dung của email (HTML)
-        html: htmlContent,
-      });
+      try {
+        await this.mailerService.sendMail({
+          to: `${emailData.email}`, // Địa chỉ email người nhận
+          subject: 'Report the results you provided', // Tiêu đề của email
+          // html: `<p>Dear ${emailData.name},</p>
+          // <p>You have selected <a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a> as your new Apple ID email address. To verify this email address belongs to you, enter the code below on the Apple ID website, verification page:</p>
+          // <p><strong>${emailData.state}</strong></p>
+          // <p>This code will expire three hours after this email was sent.</p>
+          // <p><em>Why you received this email.</em><br/>
+          // Apple requires verification whenever an email address is selected as an Apple ID.</p>
+          // <p>If you did not make this request, you can ignore this email or report it to Apple Support.</p>
+          // `, // Nội dung của email (HTML)
+          html: htmlContent,
+        });
+      } catch (error) {
+        console.log(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ==> Không gửi mail được',
+        );
+        throw new CustomException(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ===> Không gửi mail được',
+          400,
+        );
+      }
     } catch (error) {
       throw error;
     }
