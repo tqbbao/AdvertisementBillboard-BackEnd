@@ -13,7 +13,9 @@ import { SignInUserDto } from './dto/signIn.dto';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
 import { ResetPasswordWithOtpDto } from './dto/resetPasswordWithOtp.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {

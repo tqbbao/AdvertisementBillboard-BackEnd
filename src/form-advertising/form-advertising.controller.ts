@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import { CreateFormAdvertisingDto } from './dto/create-form-advertising.dto';
 import { FormAdvertisingService } from './form-advertising.service';
 import {
@@ -14,6 +15,7 @@ import {
   Put,
 } from '@nestjs/common';
 
+@ApiTags('form-advertising')
 @Controller('form-advertising')
 export class FormAdvertisingController {
   constructor(private formAdvertisingService: FormAdvertisingService) {}

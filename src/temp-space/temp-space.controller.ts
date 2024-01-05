@@ -18,7 +18,9 @@ import { multerOptions } from 'src/common/multer/config';
 import { UpdateTempSpaceDto } from './dto/update-temp-space.dto';
 import { CreateTempSpaceDto } from './dto/create-temp-space.dto';
 import { Pagination } from './dto/pagination';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('temp-space')
 @Controller('temp-space')
 export class TempSpaceController {
   constructor(private tempSpaceService: TempSpaceService) {}

@@ -1,6 +1,8 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
 import { ReverseGeocodingService } from './reverse-geocoding.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('reverse-geocoding')
 @Controller('reverse-geocoding')
 export class ReverseGeocodingController {
   constructor(

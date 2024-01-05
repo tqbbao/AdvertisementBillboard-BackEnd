@@ -14,7 +14,9 @@ import { RequestSurfaceService } from './request-surface.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { CreateRequestSurfaceDto } from './dto/create-requestSurface.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('request-surface')
 @Controller('request-surface')
 export class RequestSurfaceController {
   constructor(private readonly requestSurfaceService: RequestSurfaceService) {}

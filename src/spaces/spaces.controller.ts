@@ -25,7 +25,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
 import { CustomException } from 'src/common/exceptions/customException';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('spaces')
 @Controller('spaces')
 @UseInterceptors(ClassSerializerInterceptor)
 export class SpacesController {
