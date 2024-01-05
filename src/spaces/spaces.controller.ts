@@ -46,6 +46,12 @@ export class SpacesController {
       throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @Get('/filterviolate')
+  async findAllSpaceInReportSpace(@Query() pagination: Pagination) {
+    return this.spacesService.findAllSpaceInReportSpace(pagination);
+  }
+
   @HttpCode(200)
   @Get('/area')
   async findAllByArea(@Query() pagination: Pagination) {
