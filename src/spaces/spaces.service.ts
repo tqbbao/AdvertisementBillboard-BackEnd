@@ -58,9 +58,50 @@ export class SpacesService {
       const [data, total] = await this.spacesRepository
         .createQueryBuilder('spaces')
         .innerJoinAndSelect('spaces.reportSpaces', 'reportSpaces')
+        .innerJoinAndSelect('spaces.formAdvertising', 'formAdvertising') 
+        .innerJoinAndSelect('spaces.locationTypes', 'locationTypes') 
+        .innerJoinAndSelect('spaces.ward', 'ward')
+        .innerJoinAndSelect('spaces.district', 'district')
+        .select([
+          'spaces.id',
+          'spaces.address',
+          'spaces.latitude',
+          'spaces.longitude',
+          'spaces.imgUrl',
+          'spaces.zone',
+          'spaces.createdAt',
+          'spaces.lastUpdate',
+          'spaces.deletedAt',
+          'formAdvertising.id',
+          'formAdvertising.name',
+          'formAdvertising.createdAt',
+          'formAdvertising.lastUpdate',
+          'formAdvertising.deletedAt',
+          'locationTypes.id',
+          'locationTypes.name',
+          'locationTypes.createdAt',
+          'locationTypes.lastUpdate',
+          'locationTypes.deletedAt',
+          'ward.id',
+          'ward.name',
+          'ward.idGeo',
+          'ward.createdAt',
+          'ward.lastUpdate',
+          'ward.deletedAt',
+          'ward.district',
+          'district.id',
+          'district.name',
+          'district.latitude',
+          'district.longitude',
+          'district.idGeo',
+          'district.createdAt',
+          'district.lastUpdate',
+          'district.deletedAt',
+        ])
         .skip(skip)
         .take(limit)
         .getManyAndCount();
+
 
       // Tính số page cuối cùng
       const lastPage = Math.ceil(total / limit);
