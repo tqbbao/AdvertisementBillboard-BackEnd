@@ -76,10 +76,16 @@ export class ReportsSpaceService {
     try {
       const reportSpace = this.reportSpaceRepository.create(data);
       const result = await this.reportSpaceRepository.save(reportSpace);
-      this.eventsGateway.broadcastToDistrictWard(
-        'createReportSpace',
-        result
-      );
+      const space = await this.reportSpaceRepository.findOne({
+        where: { id: result.id },
+        relations: {
+          formReport: true,
+          space: true,
+        },
+      });
+
+      console.log('aaaaaaaaaaaaa', space);
+      this.eventsGateway.broadcastToDistrictWard('createReportSpace', space);
       return result;
     } catch (error) {
       throw error;

@@ -14,6 +14,7 @@ import { WsJwtGuard } from 'src/guards/ws.guard';
 import { ReportSpace } from 'src/entity/reportSpace.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { log } from 'console';
 
 @WebSocketGateway(81, { cors: true, transports: ['websocket', 'polling'] })
 export class EventsGateway
@@ -36,12 +37,12 @@ export class EventsGateway
   }
 
   //@UseGuards(WsJwtGuard)
-  handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
+  async handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
-    const user = this.authSocket(client)['user'];
+    await this.authSocket(client);
     
-    if (user) {
-      console.log('socker', user);
+    if (client['user']) {
+      console.log('socket', client['user']);
       this.officials.set(client.id, client);
     } else {
       this.citizens.set(client.id, client);
@@ -75,13 +76,22 @@ export class EventsGateway
   }
 
   public broadcastToDistrictWard(event: string, data: ReportSpace) {
+    console.log(event, data);
     if (this.officials.size > 0) {
       for (const client of this.officials.values()) {
-        if (data.space.district.id === client['user'].districtId) {
+        this.logger.log(client['user']);
+
+        if (
+          client['user'].districtId &&
+          data.space.district.id === client['user'].districtId
+        ) {
           client.emit(event, data);
         }
 
-        if (data.space.ward.id === client['user'].wardId) {
+        if (
+          client['user'].wardId &&
+          data.space.ward.id === client['user'].wardId
+        ) {
           client.emit(event, data);
         }
       }
@@ -95,14 +105,14 @@ export class EventsGateway
         const payload = await this.jwtService.verifyAsync(token, {
           secret: this.configService.get<string>('AT_SECRET'),
         });
+        
         client['user'] = payload;
       } catch (e) {
         console.log(e)
         throw new WsException('Invalid token.');
       }
     }
-
-    return client;
+    return undefined;
   }
 
   extractTokenFromHeader(headers: any): string | undefined {
