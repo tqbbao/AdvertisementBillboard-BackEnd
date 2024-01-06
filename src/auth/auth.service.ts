@@ -220,7 +220,24 @@ export class AuthService {
       throw new UnauthorizedException('Password is not valid');
     }
 
+
     if (user.district === null) {
+      if (user.ward === null) {
+        const districtId = null;
+        const wardId = null;
+        const payload = {
+          role: user.role,
+          username: user.username,
+          sub: user.id,
+          districtId: districtId,
+          wardId: wardId,
+        };
+        console.log(payload);
+        const { access_token, refresh_token } =
+          await this.generateToken(payload);
+        await this.updateRtById(user.id, refresh_token);
+        return { access_token, refresh_token, user };
+      }
       const districtId = user.ward.district.id;
       const wardId = user.ward.id;
       const payload = {

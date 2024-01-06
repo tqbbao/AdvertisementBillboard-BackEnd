@@ -23,9 +23,7 @@ export class EventsGateway
   constructor(
     private jwtService: JwtService,
     private readonly configService: ConfigService,
-
-  ){}
-
+  ) {}
 
   private citizens = new Map<string, Socket>(); // Store citizen's socket sessions
   private officials = new Map<string, Socket>(); // Store official's socket sessions
@@ -40,7 +38,7 @@ export class EventsGateway
   async handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
     await this.authSocket(client);
-    
+
     if (client['user']) {
       console.log('socket', client['user']);
       this.officials.set(client.id, client);
@@ -81,22 +79,33 @@ export class EventsGateway
       for (const client of this.officials.values()) {
         this.logger.log(client['user']);
 
-        if (
-          client['user'].districtId &&
-          data.space.district.id === client['user'].districtId
-        ) {
-          client.emit(event, data);
-        }
-
-        if (
-          client['user'].wardId &&
-          data.space.ward.id === client['user'].wardId
-        ) {
-          client.emit(event, data);
+        if (client['user'].districtId === data.space.district.id) {
+          //Gửi cho quận
+          if (client['user'].wardId === null) {
+            client.emit(event, data);
+          } //Gửi cho phường 
+          else if (client['user'].wardId === data.space.ward.id) {
+            client.emit(event, data);
+          }
         }
       }
     }
   }
+
+
+  // if (
+  //   client['user'].districtId &&
+  //   data.space.district.id === client['user'].districtId
+  // ) {
+  //   client.emit(event, data);
+  // }
+
+  // if (
+  //   client['user'].wardId &&
+  //   data.space.ward.id === client['user'].wardId
+  // ) {
+  //   client.emit(event, data);
+  // }
 
   async authSocket(client: Socket) {
     const token = this.extractTokenFromHeader(client.handshake?.headers);
@@ -105,10 +114,10 @@ export class EventsGateway
         const payload = await this.jwtService.verifyAsync(token, {
           secret: this.configService.get<string>('AT_SECRET'),
         });
-        
+
         client['user'] = payload;
       } catch (e) {
-        console.log(e)
+        console.log(e);
         throw new WsException('Invalid token.');
       }
     }
@@ -116,13 +125,12 @@ export class EventsGateway
   }
 
   extractTokenFromHeader(headers: any): string | undefined {
-    console.log("headers", headers)
+    //console.log('headers', headers);
     if (headers && headers.authorization) {
       const [type, token] = headers.authorization.split(' ');
       return type === 'Bearer' ? token : undefined;
     }
 
-    
     return undefined;
   }
 }

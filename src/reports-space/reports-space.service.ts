@@ -83,8 +83,6 @@ export class ReportsSpaceService {
           space: true,
         },
       });
-
-      console.log('aaaaaaaaaaaaa', space);
       this.eventsGateway.broadcastToDistrictWard('createReportSpace', space);
       return result;
     } catch (error) {
