@@ -9,7 +9,9 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { ReportsSpaceService } from 'src/reports-space/reports-space.service';
 import { SpacesService } from 'src/spaces/spaces.service';
 import { PaginationRequestSpace } from './dto/pagination';
-
+import * as path from 'path';
+import * as fs from 'fs';
+import { CustomException } from 'src/common/exceptions/customException';
 @Injectable()
 export class RequestSpaceService {
   constructor(
@@ -39,7 +41,45 @@ export class RequestSpaceService {
       await this.reportsSpaceService.updateStateReportSpace(
         parseInt(String(data.reportSpace)),
       );
-      return await this.requestEditSpaceRepository.save(requestEditSpace);
+      const requestSpace =
+        await this.requestEditSpaceRepository.save(requestEditSpace);
+
+      //send mail to user (processing)
+      const reportSpace = await this.reportsSpaceService.findReportSpaceById(
+        parseInt(String(data.reportSpace)),
+      );
+      const emailData = {
+        email: reportSpace.email,
+        name: reportSpace.name,
+        state: reportSpace.state,
+      };
+      const htmlFilePath = path.join(
+        __dirname,
+        '../../src/templates/email/processingEmail.html',
+      );
+      let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
+      for (const key in emailData) {
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        htmlContent = htmlContent.replace(regex, emailData[key]);
+      }
+
+      try {
+        await this.mailerService.sendMail({
+          to: `${emailData.email}`, // Địa chỉ email người nhận
+          subject: 'Report the results you provided', // Tiêu đề của email
+          html: htmlContent,
+        });
+      } catch (error) {
+        console.log(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ==> Không gửi mail được',
+        );
+        throw new CustomException(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ===> Không gửi mail được',
+          400,
+        );
+      }
+
+      return requestSpace;
     } catch (error) {
       throw error;
     }
@@ -166,18 +206,38 @@ export class RequestSpaceService {
         state: reportSpace.state,
       };
 
-      await this.mailerService.sendMail({
-        to: `${emailData.email}`, // Địa chỉ email người nhận
-        subject: 'Report the results you provided', // Tiêu đề của email
-        html: `<p>Dear ${emailData.name},</p>
-        <p>You have selected <a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a> as your new Apple ID email address. To verify this email address belongs to you, enter the code below on the Apple ID website, verification page:</p>
-        <p><strong>${emailData.state}</strong></p>
-        <p>This code will expire three hours after this email was sent.</p>
-        <p><em>Why you received this email.</em><br/>
-        Apple requires verification whenever an email address is selected as an Apple ID.</p>
-        <p>If you did not make this request, you can ignore this email or report it to Apple Support.</p>
-        `, // Nội dung của email (HTML)
-      });
+      const htmlFilePath = path.join(
+        __dirname,
+        '../../src/templates/email/processedEmail.html',
+      );
+      let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
+      for (const key in emailData) {
+        const regex = new RegExp(`{{${key}}}`, 'g');
+        htmlContent = htmlContent.replace(regex, emailData[key]);
+      }
+      try {
+        await this.mailerService.sendMail({
+          to: `${emailData.email}`, // Địa chỉ email người nhận
+          subject: 'Report the results you provided', // Tiêu đề của email
+          // html: `<p>Dear ${emailData.name},</p>
+          // <p>You have selected <a href="mailto:xxxxx@gmail.com">xxxxx@gmail.com</a> as your new Apple ID email address. To verify this email address belongs to you, enter the code below on the Apple ID website, verification page:</p>
+          // <p><strong>${emailData.state}</strong></p>
+          // <p>This code will expire three hours after this email was sent.</p>
+          // <p><em>Why you received this email.</em><br/>
+          // Apple requires verification whenever an email address is selected as an Apple ID.</p>
+          // <p>If you did not make this request, you can ignore this email or report it to Apple Support.</p>
+          // `, // Nội dung của email (HTML)
+          html: htmlContent,
+        });
+      } catch (error) {
+        console.log(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ==> Không gửi mail được',
+        );
+        throw new CustomException(
+          'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ===> Không gửi mail được',
+          400,
+        );
+      }
     } catch (error) {
       throw error;
     }

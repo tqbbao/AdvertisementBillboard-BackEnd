@@ -21,7 +21,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
 import { PaginationReportSpace } from './dto/pagination';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('reports-space')
 @Controller('reports-space')
 export class ReportsSpaceController {
   constructor(private readonly reportsSpaceService: ReportsSpaceService) {}

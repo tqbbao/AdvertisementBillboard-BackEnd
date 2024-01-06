@@ -1,3 +1,4 @@
+import { ApiTags } from '@nestjs/swagger';
 import { CreateLocationTypesDto } from './dto/create-location-types.dto';
 import { LocationTypesService } from './location-types.service';
 import {
@@ -19,7 +20,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-
+@ApiTags('location-types')
 @Controller('location-types')
 export class LocationTypesController {
   constructor(private locationTypesService: LocationTypesService) {}

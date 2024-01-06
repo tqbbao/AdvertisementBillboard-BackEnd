@@ -17,7 +17,10 @@ import { multerOptions } from 'src/common/multer/config';
 import { CreateRequestSpaceDto } from './dto/create-requestSpace.dto';
 import { UpdateRequestSpaceDto } from './dto/update-requestSpace.dto';
 import { PaginationRequestSpace } from './dto/pagination';
+import { ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('request-space')
 @Controller('request-space')
 export class RequestSpaceController {
   constructor(private readonly requestSpaceService: RequestSpaceService) {}

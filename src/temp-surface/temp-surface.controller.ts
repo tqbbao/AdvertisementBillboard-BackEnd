@@ -18,7 +18,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { UpdateTempSurfaceDto } from './dto/update-temp-surface.dto';
 import { CreateTempSurfaceDto } from './dto/create-temp-surface.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('temp-surface')
 @Controller('temp-surface')
 export class TempSurfaceController {
   constructor(private readonly tempSurfaceService: TempSurfaceService) {}
