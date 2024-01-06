@@ -4,9 +4,10 @@ import { ReportsSpaceService } from './reports-space.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReportSpace } from 'src/entity/reportSpace.entity';
 import { RequestEditSpace } from 'src/entity/requestEditSpace.entity';
+import { EventsModule } from 'src/event/events.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ReportSpace, RequestEditSpace])],
+  imports: [EventsModule, TypeOrmModule.forFeature([ReportSpace, RequestEditSpace])],
   controllers: [ReportsSpaceController],
   providers: [ReportsSpaceService],
   exports: [ReportsSpaceService],

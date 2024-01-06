@@ -7,6 +7,7 @@ import { UpdateReportSpaceDto } from './dto/update-reportSpace.dto';
 import { ReportState } from 'src/common/enums/report-state.enum';
 import { PaginationReportSpace } from './dto/pagination';
 import { RequestEditSpace } from 'src/entity/requestEditSpace.entity';
+import { EventsGateway } from 'src/event/events.gateway';
 
 @Injectable()
 export class ReportsSpaceService {
@@ -16,6 +17,8 @@ export class ReportsSpaceService {
 
     @InjectRepository(RequestEditSpace)
     private readonly requestEditSpaceRepository: Repository<RequestEditSpace>,
+
+    private readonly eventsGateway: EventsGateway,
   ) {}
 
   //Find all report spaces
