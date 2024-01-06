@@ -17,7 +17,9 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 //@UseGuards(AuthGuard)

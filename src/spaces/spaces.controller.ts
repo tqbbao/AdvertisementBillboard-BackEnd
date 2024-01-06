@@ -25,7 +25,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
 import { CustomException } from 'src/common/exceptions/customException';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('spaces')
 @Controller('spaces')
 @UseInterceptors(ClassSerializerInterceptor)
 export class SpacesController {
@@ -44,6 +46,12 @@ export class SpacesController {
       throw new CustomException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @Get('/filterviolate')
+  async findAllSpaceInReportSpace(@Query() pagination: Pagination) {
+    return this.spacesService.findAllSpaceInReportSpace(pagination);
+  }
+
   @HttpCode(200)
   @Get('/area')
   async findAllByArea(@Query() pagination: Pagination) {

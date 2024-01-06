@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Spaces } from 'src/entity/spaces.entity';
 import { Not, Repository } from 'typeorm';
@@ -8,6 +12,7 @@ import { UpdateSpaceDto } from './dto/update-space.dto';
 import { removeFile } from 'src/common/multer/config';
 import { ReverseGeocodingService } from 'src/reverse-geocoding/reverse-geocoding.service';
 import { MailerService } from '@nestjs-modules/mailer';
+import { CustomException } from 'src/common/exceptions/customException';
 
 @Injectable()
 export class SpacesService {
@@ -16,8 +21,6 @@ export class SpacesService {
     private spacesRepository: Repository<Spaces>,
     private readonly rere: ReverseGeocodingService,
     private mailerService: MailerService,
-
-    
   ) {}
 
   async reverseGeocoding(lat: number, long: number) {
@@ -32,6 +35,95 @@ export class SpacesService {
     return dataGeocoding;
   }
 
+  //find all space where space is present in report_space
+  async findAllSpaceInReportSpace(pagination: Pagination) {
+    // Giới hạn 1 page bao nhiêu item
+    const limit = Number(pagination.limit) || 100000;
+    // Số page hiện tại
+    const page = Number(pagination.page) || 1;
+    // Tính skip bao nhiêu item
+    const skip = (page - 1) * limit;
+    // try {
+    //   const temp =  await this.spacesRepository
+    //     .createQueryBuilder('spaces')
+    //     .innerJoinAndSelect('spaces.reportSpaces', 'reportSpaces')
+    //     .getMany();
+
+    //   return temp;
+
+    // } catch (error) {
+    //   throw new CustomException(error.message, 400);
+    // }
+    try {
+      const [data, total] = await this.spacesRepository
+        .createQueryBuilder('spaces')
+        .innerJoinAndSelect('spaces.reportSpaces', 'reportSpaces')
+        .innerJoinAndSelect('spaces.formAdvertising', 'formAdvertising') 
+        .innerJoinAndSelect('spaces.locationTypes', 'locationTypes') 
+        .innerJoinAndSelect('spaces.ward', 'ward')
+        .innerJoinAndSelect('spaces.district', 'district')
+        .select([
+          'spaces.id',
+          'spaces.address',
+          'spaces.latitude',
+          'spaces.longitude',
+          'spaces.imgUrl',
+          'spaces.zone',
+          'spaces.createdAt',
+          'spaces.lastUpdate',
+          'spaces.deletedAt',
+          'formAdvertising.id',
+          'formAdvertising.name',
+          'formAdvertising.createdAt',
+          'formAdvertising.lastUpdate',
+          'formAdvertising.deletedAt',
+          'locationTypes.id',
+          'locationTypes.name',
+          'locationTypes.createdAt',
+          'locationTypes.lastUpdate',
+          'locationTypes.deletedAt',
+          'ward.id',
+          'ward.name',
+          'ward.idGeo',
+          'ward.createdAt',
+          'ward.lastUpdate',
+          'ward.deletedAt',
+          'ward.district',
+          'district.id',
+          'district.name',
+          'district.latitude',
+          'district.longitude',
+          'district.idGeo',
+          'district.createdAt',
+          'district.lastUpdate',
+          'district.deletedAt',
+        ])
+        .skip(skip)
+        .take(limit)
+        .getManyAndCount();
+
+
+      // Tính số page cuối cùng
+      const lastPage = Math.ceil(total / limit);
+      // Tính next page
+      const nextPage = page + 1 > lastPage ? null : page + 1;
+      // Tính prev page
+      const prevPage = page - 1 < 1 ? null : page - 1;
+      return {
+        data,
+        pagination: {
+          totalPage: total,
+          currentPage: page,
+          lastPage,
+          nextPage,
+          prevPage,
+        },
+      };
+    } catch (error) {
+      throw new CustomException(error.message, 400);
+    }
+  }
+
   async findAll(pagination: Pagination) {
     // Giới hạn 1 page bao nhiêu item
     const limit = Number(pagination.limit) || 10;
@@ -41,7 +133,6 @@ export class SpacesService {
     const skip = (page - 1) * limit;
 
     //
-
     const [data, total] = await this.spacesRepository.findAndCount({
       relations: {
         formAdvertising: true,
@@ -72,14 +163,11 @@ export class SpacesService {
 
   //Find all spaces by area
   async findAllByArea(pagination: Pagination) {
-    const ward = pagination.ward ;
+    const ward = pagination.ward;
     const district = pagination.district;
 
     return await this.spacesRepository.find({
-      where: [
-        { district: { id: district } },
-        { ward: { id: ward } },
-      ],
+      where: [{ district: { id: district } }, { ward: { id: ward } }],
       relations: {
         formAdvertising: true,
         locationTypes: true,
@@ -163,9 +251,4 @@ export class SpacesService {
       throw error;
     }
   }
-
-
-
-
-  
 }

@@ -21,7 +21,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
 import { PaginationSurface } from './dto/pagination';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('surfaces')
 @Controller('surfaces')
 export class SurfacesController {
   constructor(private surfacesService: SurfacesService) {}

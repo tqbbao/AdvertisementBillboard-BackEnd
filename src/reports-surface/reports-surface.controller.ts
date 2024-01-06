@@ -20,7 +20,9 @@ import { PaginationReportSurface } from './dto/pagination';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('reports-surface')
 @Controller('reports-surface')
 export class ReportsSurfaceController {
   constructor(private readonly reportsSurfaceService: ReportsSurfaceService) {}

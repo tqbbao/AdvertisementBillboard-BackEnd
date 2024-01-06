@@ -1,6 +1,8 @@
 import { Controller, Get, HttpCode } from '@nestjs/common';
 import { FormReportsService } from './form-reports.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('form-reports')
 @Controller('form-reports')
 export class FormReportsController {
     constructor(
