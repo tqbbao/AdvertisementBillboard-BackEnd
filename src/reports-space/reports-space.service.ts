@@ -75,7 +75,12 @@ export class ReportsSpaceService {
   async createReportSpace(data: CreateReportSpaceDto) {
     try {
       const reportSpace = this.reportSpaceRepository.create(data);
-      return await this.reportSpaceRepository.save(reportSpace);
+      const result = await this.reportSpaceRepository.save(reportSpace);
+      this.eventsGateway.broadcastToDistrictWard(
+        'createReportSpace',
+        result
+      );
+      return result;
     } catch (error) {
       throw error;
     }

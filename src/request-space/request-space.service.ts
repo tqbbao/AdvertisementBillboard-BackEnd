@@ -12,6 +12,7 @@ import { PaginationRequestSpace } from './dto/pagination';
 import * as path from 'path';
 import * as fs from 'fs';
 import { CustomException } from 'src/common/exceptions/customException';
+import { EventsGateway } from 'src/event/events.gateway';
 @Injectable()
 export class RequestSpaceService {
   constructor(
@@ -20,6 +21,7 @@ export class RequestSpaceService {
     private mailerService: MailerService,
     private readonly reportsSpaceService: ReportsSpaceService,
     private readonly spacesService: SpacesService,
+    private readonly eventsGateway: EventsGateway,
   ) {}
 
   //Find all request edit space
@@ -229,6 +231,10 @@ export class RequestSpaceService {
           // `, // Nội dung của email (HTML)
           html: htmlContent,
         });
+        this.eventsGateway.broadcastToCitizens(
+          'updateReportSpace',
+          spaceAfterAccept,
+        )
       } catch (error) {
         console.log(
           'Lỗi Google Mail: MAIL_USER và MAIL_PASSWORD không đúng ==> Không gửi mail được',

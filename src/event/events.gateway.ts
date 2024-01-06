@@ -2,6 +2,7 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket } from
 import { UseGuards } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { WsJwtGuard } from 'src/guards/ws.guard';
+import { ReportSpace } from 'src/entity/reportSpace.entity';
 
 @WebSocketGateway()
 export class EventsGateway {
@@ -41,6 +42,20 @@ export class EventsGateway {
         if (this.officials.size > 0) {
             for (const client of this.officials.values()) {
                 client.emit(event, data);
+            }
+        }
+    }
+
+    public broadcastToDistrictWard(event: string, data: ReportSpace) {
+        if (this.officials.size > 0) {
+            for (const client of this.officials.values()) {
+                if (data.space.district.id === client['user'].districtId) {
+                    client.emit(event, data);
+                }
+
+                if (data.space.ward.id === client['user'].wardId) {
+                    client.emit(event, data);
+                }
             }
         }
     }

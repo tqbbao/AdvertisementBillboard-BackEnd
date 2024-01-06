@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import { ForgotPasswordDto } from './dto/forgotPassword.dto';
 import { ResetPasswordWithOtpDto } from './dto/resetPasswordWithOtp.dto';
 import e from 'express';
+import { Districts } from 'src/entity/districts.entity';
 
 @Injectable()
 export class AuthService {
@@ -54,11 +55,15 @@ export class AuthService {
     role: UserRole;
     username: string;
     sub: number;
+    districtId: number;
+    wardId: number;
   }) {
     const jwtPayload: JwtPayload = {
       username: payload.username,
       sub: payload.sub,
       role: payload.role,
+      districtId: payload.districtId,
+      wardId: payload.wardId,
     };
 
     const at = await this.jwtService.signAsync(jwtPayload, {
@@ -212,7 +217,7 @@ export class AuthService {
       throw new UnauthorizedException('Password is not valid');
     }
 
-    const payload = { role: user.role, username: user.username, sub: user.id };
+    const payload = { role: user.role, username: user.username, sub: user.id, districtId: user.district.id, wardId: user.ward.id };
     const { access_token, refresh_token } = await this.generateToken(payload);
     await this.updateRtById(user.id, refresh_token);
     return { access_token, refresh_token, user };
@@ -233,6 +238,8 @@ export class AuthService {
         username: verifyToken.username,
         sub: verifyToken.sub,
         role: verifyToken.role,
+        districtId: verifyToken.districtId,
+        wardId: verifyToken.wardId,
       };
       const { access_token, refresh_token } = await this.generateToken(payload);
 
