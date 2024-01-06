@@ -32,6 +32,18 @@ export class SpacesService {
     return dataGeocoding;
   }
 
+async reverseGeocoding1(lat: number, long: number) {
+    const dataGeocoding = await this.rere.reverseGeocoding(lat, long);
+    console.log(dataGeocoding);
+
+    // const result = await this.mailerService.sendMail({
+    //   to: 'tempsampleindex123@gmail.com', // Địa chỉ email người nhận
+    //   subject: 'Subject of the Email', // Tiêu đề của email
+    //   html: '<p>Content of the Email</p>', // Nội dung của email (HTML)
+    // });
+    return dataGeocoding;
+  }
+
   async findAll(pagination: Pagination) {
     // Giới hạn 1 page bao nhiêu item
     const limit = Number(pagination.limit) || 10;
