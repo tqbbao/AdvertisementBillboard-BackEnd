@@ -38,6 +38,7 @@ import { LocationTypesModule } from './location-types/location-types.module';
 import { RequestEditSurface } from './entity/requestEditSurface.entity';
 import { TempSurfaceModule } from './temp-surface/temp-surface.module';
 import { TempSurface } from './entity/tempSurface.entity';
+import { EventsModule } from './event/events.module';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { TempSurface } from './entity/tempSurface.entity';
     LocationTypesModule,
     DistrictsModule,
     RequestSpaceModule,
+    EventsModule,
     MailerModule.forRootAsync({
       imports: [ConfigModule], // Import ConfigModule để sử dụng ConfigService
       useFactory: async (configService: ConfigService) => ({
