@@ -173,7 +173,10 @@ export class AuthService {
       message: 'Reset password success',
     };
   }
-  async resetPasswordWithOtp(query: ForgotPasswordDto, data: ResetPasswordWithOtpDto) {
+  async resetPasswordWithOtp(
+    query: ForgotPasswordDto,
+    data: ResetPasswordWithOtpDto,
+  ) {
     const user = await this.userRepository.findOne({
       where: {
         email: query.email,
@@ -217,10 +220,41 @@ export class AuthService {
       throw new UnauthorizedException('Password is not valid');
     }
 
-    const payload = { role: user.role, username: user.username, sub: user.id, districtId: user.district.id, wardId: user.ward.id };
-    const { access_token, refresh_token } = await this.generateToken(payload);
-    await this.updateRtById(user.id, refresh_token);
-    return { access_token, refresh_token, user };
+    if (user.district === null) {
+      const districtId = user.ward.district.id;
+      const wardId = user.ward.id;
+      const payload = {
+        role: user.role,
+        username: user.username,
+        sub: user.id,
+        districtId: districtId,
+        wardId: wardId,
+      };
+      console.log(payload);
+      const { access_token, refresh_token } = await this.generateToken(payload);
+      await this.updateRtById(user.id, refresh_token);
+      return { access_token, refresh_token, user };
+    } else if (user.ward === null) {
+      const districtId = user.district.id;
+      const wardId = null;
+      const payload = {
+        role: user.role,
+        username: user.username,
+        sub: user.id,
+        districtId: districtId,
+        wardId: wardId,
+      };
+      console.log(payload);
+      const { access_token, refresh_token } = await this.generateToken(payload);
+      await this.updateRtById(user.id, refresh_token);
+      return { access_token, refresh_token, user };
+    }
+
+    //const payload = { role: user.role, username: user.username, sub: user.id, districtId: districtId, wardId: wardId};
+    // console.log(payload);
+    // const { access_token, refresh_token } = await this.generateToken(payload);
+    // await this.updateRtById(user.id, refresh_token);
+    // return { access_token, refresh_token, user };
   }
 
   async refreshToken(refreshToken: string) {
