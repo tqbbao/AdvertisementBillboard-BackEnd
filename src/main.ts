@@ -24,5 +24,6 @@ async function bootstrap() {
     prefix: '/templates', // Tiền tố URL, ví dụ: /public/filename.jpg
   });
   await app.listen(3000);
+//
 }
 bootstrap();
