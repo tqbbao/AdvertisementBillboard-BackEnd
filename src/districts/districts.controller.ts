@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, Param, Query } from '@nestjs/common';
 import { DistrictsService } from './districts.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Pagination } from './dto/pagination';
 
 @ApiTags('districts')
@@ -14,25 +14,34 @@ export class DistrictsController {
   // }
 
   
-  @HttpCode(200)
   //Find all districts
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách quận' })
+  @ApiResponse({ status: 200, description: 'Danh sách quận' })
   @Get()
   async findAll() {
     return await this.districtService.findAll();
   }
-  @HttpCode(200)
   //Find all districts by pagination
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách quận theo phân trang' })
+  @ApiQuery({ name: 'page', description: 'Số trang', required: false })
+  @ApiQuery({ name: 'limit', description: 'Số lượng quận', required: false })
+  @ApiResponse({ status: 200, description: 'Danh sách quận theo phân trang' })
   @Get('/pagination')
   async findAllByPagination(@Query() pagination: Pagination) {
     return await this.districtService.findAllByPagination(pagination);
   }
   
-  @HttpCode(200)
   //Find by id
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách quận theo id' })
+  @ApiParam({ name: 'id', description: 'id quận', required: true })
+  @ApiResponse({ status: 200, description: 'Danh sách quận theo id' })
   @Get('/:id')
   async findById(@Param('id') id: number) {
-    return await this.districtService.findById(id);
+    return await this.districtService.findById(id)
+;
   }
-
 
 }
