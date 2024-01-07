@@ -48,7 +48,7 @@ export class ReportSpace {
   })
   formReport: FormReport;
 
-  @ManyToOne(() => Spaces, (space) => space.reportSpaces, {eager: true })
+  @ManyToOne(() => Spaces, (space) => space.reportSpaces, {eager: true, nullable: true })
   space: Spaces;
 
 

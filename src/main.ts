@@ -25,6 +25,6 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'src', 'templates'), {
     prefix: '/templates', // Tiền tố URL, ví dụ: /public/filename.jpg
   });
-  await app.listen(4000);
+  await app.listen(3000);
 }
 bootstrap();
