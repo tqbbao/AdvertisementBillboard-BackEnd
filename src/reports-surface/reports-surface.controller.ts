@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -20,7 +21,7 @@ import { PaginationReportSurface } from './dto/pagination';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('reports-surface')
 @Controller('reports-surface')
@@ -29,24 +30,35 @@ export class ReportsSurfaceController {
 
   //Find all report surfaces
   @Get()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách report surface' })
   async findAllReportSurfaces() {
     return await this.reportsSurfaceService.findAllReportSurfaces();
   }
 
   //Find all report surfaces by ward id and space district id
   @Get('/area')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách report surface theo khu vực' })
+  @ApiQuery({ name: 'pagination', type: PaginationReportSurface, required: false })
   async findAllByArea(@Query() pagination: PaginationReportSurface) {
     return await this.reportsSurfaceService.findAllByArea(pagination);
   }
 
   //Find report surface by id
   @Get('/:id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Chi tiết report surface' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   async findReportSurfaceById(@Param('id', ParseIntPipe) id: number) {
     return await this.reportsSurfaceService.findReportSurfaceById(id);
   }
 
   //Create a new report surface
   @Post()
+  @HttpCode(201)
+  @ApiOperation({ summary: 'Tạo report surface' })
+  @ApiBody({ type: CreateReportSurface })
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('report-surfaces')))
   async createReportSurface(
     @Req() req: any,
@@ -72,6 +84,9 @@ export class ReportsSurfaceController {
 
   //Update a report surface
   @Put(':id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Cập nhật report surface' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   async updateReportSurface(
     @Body() data: UpdateReportSurface,
     @Body('id') id: number,
@@ -80,11 +95,17 @@ export class ReportsSurfaceController {
   }
 
   @Delete(':id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Xoá report surface' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   async delete(@Param('id') id: number) {
     return await this.reportsSurfaceService.removeReportSurface(id);
   }
 
   @Post(':id/restore')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Khôi phục report surface' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   restore(@Param('id') id: number) {
     return this.reportsSurfaceService.restoreReportSurface(id);
   }
