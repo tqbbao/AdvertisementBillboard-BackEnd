@@ -25,7 +25,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
 import { CustomException } from 'src/common/exceptions/customException';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('spaces')
 @Controller('spaces')
@@ -35,6 +35,8 @@ export class SpacesController {
 
   @HttpCode(200)
   @Get()
+  @ApiOperation({ summary: 'Danh sách space' })
+  @ApiQuery({ name: 'pagination', type: Pagination, required: false })
   async findAll(@Query() pagination: Pagination) {
     try {
       const spaces = await this.spacesService.findAll(pagination);
@@ -48,12 +50,17 @@ export class SpacesController {
   }
 
   @Get('/filterviolate')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách space' })
+  @ApiQuery({ name: 'pagination', type: Pagination, required: false })
   async findAllSpaceInReportSpace(@Query() pagination: Pagination) {
     return this.spacesService.findAllSpaceInReportSpace(pagination);
   }
 
   @HttpCode(200)
   @Get('/area')
+  @ApiOperation({ summary: 'Danh sách space theo khu vực' })
+  @ApiQuery({ name: 'pagination', type: Pagination, required: false })
   async findAllByArea(@Query() pagination: Pagination) {
     try {
       const spaces = await this.spacesService.findAllByArea(pagination);
@@ -68,6 +75,9 @@ export class SpacesController {
 
   //Find by id
   @Get(':id')
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách space theo id' })
+  @ApiQuery({ name: 'pagination', type: Pagination, required: false })
   async findById(@Param('id', ParseIntPipe) id: number) {
     try {
       const space = await this.spacesService.findById(id);
@@ -82,6 +92,8 @@ export class SpacesController {
 
   @HttpCode(200)
   @Get(':lat,:long')
+  @ApiOperation({ summary: 'Danh sách space theo (lat, long)' })
+  @ApiQuery({ name: 'lat', type: Number, required: true })
   async findByLatLong(@Param('lat') lat: number, @Param('long') long: number) {
     try {
       const space = await this.spacesService.findByLatLong(lat, long);
@@ -95,6 +107,8 @@ export class SpacesController {
   }
 
   @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách space theo (lat, long)' })
+  @ApiQuery({ name: 'lat', type: Number, required: true })
   @Get('/reversegeocoding/:lat,:long')
   async reverseGeocoding(
     @Param('lat') lat: number,
@@ -105,6 +119,8 @@ export class SpacesController {
 
   @HttpCode(201)
   @Post()
+  @ApiOperation({ summary: 'Tạo space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
   async create(
     @Req() req: any,
@@ -134,6 +150,8 @@ export class SpacesController {
 
   @HttpCode(200)
   @Put(':id')
+  @ApiOperation({ summary: 'Cập nhật space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
   async update(
     @Req() req: any,
@@ -166,6 +184,8 @@ export class SpacesController {
   }
 
   @HttpCode(200)
+  @ApiOperation({ summary: 'Xóa space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     return await this.spacesService.removeSpace(id);
@@ -173,12 +193,16 @@ export class SpacesController {
 
   @HttpCode(200)
   @Post(':id/restore')
+  @ApiOperation({ summary: 'Khoi phuc space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   restore(@Param('id') id: number) {
     return this.spacesService.restoreSpace(id);
   }
 
   //Test upload file
   @Post('upload')
+  @ApiOperation({ summary: 'Upload file' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('spaces')))
   uploadFile(@Res() res: Response, @UploadedFile() file: Express.Multer.File) {
     console.log(file);

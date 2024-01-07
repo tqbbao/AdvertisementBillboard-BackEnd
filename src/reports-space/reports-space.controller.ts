@@ -21,7 +21,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from 'src/common/multer/config';
 import { Response } from 'express';
 import { PaginationReportSpace } from './dto/pagination';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('reports-space')
 @Controller('reports-space')
@@ -30,12 +30,15 @@ export class ReportsSpaceController {
 
   //Find all report spaces
   @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách report space' })
   @Get()
   async findAllReportSpaces() {
     return await this.reportsSpaceService.findAllReportSpaces();
   }
 
   @HttpCode(200)
+  @ApiOperation({ summary: 'Danh sách report space' })
+  @ApiQuery({ name: 'pagination', type: PaginationReportSpace, required: false })
   @Get('/area')
   async findAllByArea(@Query() pagination: PaginationReportSpace) {
     return await this.reportsSpaceService.findAllByArea(pagination);
@@ -44,6 +47,8 @@ export class ReportsSpaceController {
   //Find report space by id
   @HttpCode(200)
   @Get(':id')
+  @ApiOperation({ summary: 'Chi tiết report space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   async findReportSpaceById(@Param('id', ParseIntPipe) id: number) {
     return await this.reportsSpaceService.findReportSpaceById(id);
   }
@@ -51,6 +56,8 @@ export class ReportsSpaceController {
   //
   @HttpCode(200)
   @Delete('/update-state-report-space-delete/:id')
+  @ApiOperation({ summary: 'Xóa report space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   async updateStateReportSpaceDelete(
     @Param('id', ParseIntPipe) id: number,
   ) {
@@ -74,6 +81,8 @@ export class ReportsSpaceController {
   //Create a new report space
   @HttpCode(201)
   @Post()
+  @ApiOperation({ summary: 'Tạo report space' })
+  @ApiBody({ type: CreateReportSpaceDto })
   @UseInterceptors(FileInterceptor('imgUrl', multerOptions('report-spaces')))
   async createReportSpace(
     @Req() req: any,
@@ -100,6 +109,8 @@ export class ReportsSpaceController {
   //Update a report space
   @HttpCode(200)
   @Put(':id')
+  @ApiOperation({ summary: 'Cập nhật report space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   async updateReportSpace(
     @Body() data: UpdateReportSpaceDto,
     @Body('id') id: number,
@@ -109,12 +120,16 @@ export class ReportsSpaceController {
 
   @HttpCode(200)
   @Delete(':id')
+  @ApiOperation({ summary: 'Xoá report space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   async delete(@Param('id', ParseIntPipe) id: number) {
     return await this.reportsSpaceService.removeReportSpace(id);
   }
 
   @HttpCode(200)
   @Post(':id/restore')
+  @ApiOperation({ summary: 'Khôi phục report space' })
+  @ApiQuery({ name: 'id', type: Number, required: true })
   restore(@Param('id') id: number) {
     return this.reportsSpaceService.restoreReportSpace(id);
   }
