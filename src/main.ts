@@ -4,9 +4,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { LoggerInterceptor } from './common/interceptors/logger.interceptor';
+import { LoggerServiceWinston } from './common/helpers/LoggerServiceWinston';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.useGlobalInterceptors(new LoggerInterceptor(new LoggerServiceWinston));
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({});
   const config = new DocumentBuilder()
